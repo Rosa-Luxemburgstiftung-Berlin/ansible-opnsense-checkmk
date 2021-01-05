@@ -12,3 +12,6 @@ opn_packages:
 opn_install_check_mk: True
 ```
 The role must be run as root or w/ `become: yes`
+
+## update
+you may like to replace the `files/check_mk_agent.freebsd` with the **Check_MK Agent for FreeBSD** from your check_mk instance (https://yourCheckMK/check_mk/wato.py?folder=&mode=download_agents)
