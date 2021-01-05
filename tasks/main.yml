@@ -1,0 +1,97 @@
+---
+- name: Install opnsense packages
+  pkgng:
+    name: "{{ opn_packages }}"
+    state: present
+
+# TODO:
+# enable lldpd in /etc/rc.conf w/ lldpd_enable="YES" and start service
+# set cfg xml
+# +    <firmware>
+# +      <plugins>os-lldpd</plugins>
+# +    </firmware>
+#    </system>
+# and
+# +    <lldpd>
+# +      <general version="1.0.0">
+# +        <enabled>0</enabled>
+# +        <cdp>0</cdp>
+# +        <fdp>0</fdp>
+# +        <edp>0</edp>
+# +        <sonmp>0</sonmp>
+# +        <interface/>
+# +      </general>
+# +    </lldpd>
+#    </OPNsense>
+
+
+- name: copy check_mk_agent
+  copy:
+    src: check_mk_agent.freebsd
+    dest: "{{ opn_check_mk_path }}"
+    mode: 0700
+  notify: service inetd
+  when: opn_install_check_mk
+
+- name: create lib dirs
+  file:
+    path: "{{ opn_check_mk_lib_dir }}/{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - local
+    - plugins
+  when: opn_install_check_mk
+
+- name: copy check_mk plugins
+  copy:
+    src: "{{ item }}"
+    dest: "{{ opn_check_mk_lib_dir }}/plugins/{{ item }}"
+    mode: 0700
+  with_items: "{{ opn_check_mk_plugins }}"
+  when: opn_install_check_mk
+
+- name: copy check_mk local checks
+  copy:
+    src: "{{ item }}"
+    dest: "{{ opn_check_mk_lib_dir }}/local/{{ item }}"
+    mode: 0700
+  with_items: "{{ opn_check_mk_local_checks }}"
+  when: opn_install_check_mk
+
+- name: enable check_mk_agent in /etc/inetd.conf
+  lineinfile:
+    path:  /etc/inetd.conf
+    line: "check_mk  stream  tcp nowait  root  {{ opn_check_mk_path }}"
+    regexp: "^check_mk "
+  notify: service inetd
+  when: opn_install_check_mk
+
+- name: add service to /etc/services
+  lineinfile:
+    path: /etc/services
+    line: "check_mk	{{ opn_check_mk_port }}/tcp   #check_mk agent"
+    regexp: "^check_mk "
+  notify: service inetd
+  when: opn_install_check_mk
+
+- name: setup /etc/hosts.allow
+  lineinfile:
+    path: /etc/hosts.allow
+    line: "check_mk	: {{ checkmk_ip }} : allow"
+    regexp: "^check_mk "
+  notify: service inetd
+  when: opn_install_check_mk
+
+- name: enable inetd
+  blockinfile:
+    backup: yes
+    path: /etc/rc.conf
+    block: |
+      inetd_enable=yes
+      inetd_flags=-wW
+    marker: "# -- {mark} ANSIBLE MANAGED BLOCK for inetd -->"
+  notify: service inetd
+
+...
+# vim: tabstop=2 expandtab shiftwidth=2 softtabstop=2 smartindent nu ft=yaml
