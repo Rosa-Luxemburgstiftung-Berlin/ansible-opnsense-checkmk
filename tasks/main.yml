@@ -4,27 +4,6 @@
     name: "{{ opn_packages }}"
     state: present
 
-# TODO:
-# enable lldpd in /etc/rc.conf w/ lldpd_enable="YES" and start service
-# set cfg xml
-# +    <firmware>
-# +      <plugins>os-lldpd</plugins>
-# +    </firmware>
-#    </system>
-# and
-# +    <lldpd>
-# +      <general version="1.0.0">
-# +        <enabled>0</enabled>
-# +        <cdp>0</cdp>
-# +        <fdp>0</fdp>
-# +        <edp>0</edp>
-# +        <sonmp>0</sonmp>
-# +        <interface/>
-# +      </general>
-# +    </lldpd>
-#    </OPNsense>
-
-
 - name: copy check_mk_agent
   copy:
     src: check_mk_agent.freebsd
