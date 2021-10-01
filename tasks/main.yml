@@ -70,6 +70,19 @@
       inetd_enable=yes
       inetd_flags=-wW
     marker: "# -- {mark} ANSIBLE MANAGED BLOCK for inetd -->"
+  when: ansible_local.opnsense.core.product_series is version('21', '<')
+  notify: service inetd
+
+- name: enable inetd
+  blockinfile:
+    backup: yes
+    path: /etc/rc.conf.d/inetd
+    create: yes
+    block: |
+      inetd_enable=yes
+      inetd_flags=-wW
+    marker: "# -- {mark} ANSIBLE MANAGED BLOCK for inetd -->"
+  when: ansible_local.opnsense.core.product_series is version('21', '>=')
   notify: service inetd
 
 ...
