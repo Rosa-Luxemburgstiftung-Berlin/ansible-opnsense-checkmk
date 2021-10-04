@@ -8,7 +8,7 @@ opn_packages:
 
 opn_install_check_mk: True
 opn_check_mk_path: /usr/local/sbin/check_mk_agent
-opn_check_mk_lib_dir: /usr/lib/check_mk_agent
+opn_check_mk_lib_dir: /usr/local/lib/check_mk_agent
 opn_check_mk_port: 6556
 
 # list of plugins and local checks to install
