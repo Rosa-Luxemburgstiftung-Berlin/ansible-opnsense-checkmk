@@ -62,6 +62,10 @@
   notify: service inetd
   when: opn_install_check_mk
 
+- debug:
+    var: ansible_local
+    verbosity: 1
+
 - name: enable inetd
   blockinfile:
     backup: yes
@@ -70,7 +74,7 @@
       inetd_enable=yes
       inetd_flags=-wW
     marker: "# -- {mark} ANSIBLE MANAGED BLOCK for inetd -->"
-  when: ansible_local.opnsense.core.product_series is version('21', '<')
+  when: ansible_local.opnsense.core.product_series|default(ansible_local.opnsense.core.product_abi) is version('21', '<')
   notify: service inetd
 
 - name: enable inetd
@@ -82,7 +86,7 @@
       inetd_enable=yes
       inetd_flags=-wW
     marker: "# -- {mark} ANSIBLE MANAGED BLOCK for inetd -->"
-  when: ansible_local.opnsense.core.product_series is version('21', '>=')
+  when: ansible_local.opnsense.core.product_series|default(ansible_local.opnsense.core.product_abi) is version('21', '>=')
   notify: service inetd
 
 ...
