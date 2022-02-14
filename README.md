@@ -7,7 +7,11 @@ Ansible role for opnsense installing check_mk agent.
 
 It includes a local check for gateway status monitoring.
 
-## setup
+## Role Variables
+
+[defaults/main.yml](defaults/main.yml)
+
+## Setup
 
 ### Check_MK Agent
 
@@ -17,6 +21,6 @@ Download the **Check_MK Agent for FreeBSD** from your check_mk instance (https:/
 
 The role requires to be run after https://github.com/Rosa-Luxemburgstiftung-Berlin/ansible-opnsense-facts .
 
-### notes
+### Notes
 
 The role must be run as root or w/ `become: true`.
