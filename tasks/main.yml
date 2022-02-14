@@ -49,7 +49,7 @@
 - name: add service to /etc/services
   lineinfile:
     path: /etc/services
-    line: "check_mk	{{ opn_check_mk_port }}/tcp   #check_mk agent"
+    line: "check_mk	{{ opn_check_mk_port }}/tcp   #check_mk agent"  # noqa no-tabs
     regexp: "^check_mk "
   notify: service inetd
   when: opn_install_check_mk
@@ -57,7 +57,7 @@
 - name: setup /etc/hosts.allow
   lineinfile:
     path: /etc/hosts.allow
-    line: "check_mk	: {{ checkmk_ip }} : allow"
+    line: "check_mk	: {{ checkmk_ip }} : allow"  # noqa no-tabs
     regexp: "^check_mk "
   notify: service inetd
   when: opn_install_check_mk
