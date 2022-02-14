@@ -40,7 +40,7 @@
 
 - name: enable check_mk_agent in /etc/inetd.conf
   lineinfile:
-    path:  /etc/inetd.conf
+    path: /etc/inetd.conf
     line: "check_mk  stream  tcp nowait  root  {{ opn_check_mk_path }}"
     regexp: "^check_mk "
   notify: service inetd
@@ -62,13 +62,14 @@
   notify: service inetd
   when: opn_install_check_mk
 
-- debug:
+- name: debug ansible_local
+  debug:
     var: ansible_local
     verbosity: 1
 
 - name: enable inetd
   blockinfile:
-    backup: yes
+    backup: true
     path: /etc/rc.conf
     block: |
       inetd_enable=yes
@@ -79,13 +80,16 @@
 
 - name: enable inetd
   blockinfile:
-    backup: yes
+    backup: true
     path: /etc/rc.conf.d/inetd
-    create: yes
+    create: true
     block: |
       inetd_enable=yes
       inetd_flags=-wW
     marker: "# -- {mark} ANSIBLE MANAGED BLOCK for inetd -->"
+    owner: root
+    group: wheel
+    mode: 0644
   when: ansible_local.opnsense.core.product_series|default(ansible_local.opnsense.core.product_abi) is version('21', '>=')
   notify: service inetd
 

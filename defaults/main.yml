@@ -1,12 +1,11 @@
 ---
-
 # for check_mk you should set at least
 opn_packages:
   - bash
   - ipmitool
   - libstatgrab
 
-opn_install_check_mk: True
+opn_install_check_mk: true
 opn_check_mk_path: /usr/local/sbin/check_mk_agent
 opn_check_mk_lib_dir: /usr/local/lib/check_mk_agent
 opn_check_mk_port: 6556
@@ -19,5 +18,3 @@ opn_check_mk_local_checks:
 # for example:
 # https://raw.githubusercontent.com/zerwes/check_mk_extensions/wireguard-fix-plugin-interpreter/wireguard/agents/plugins/wireguard
 opn_check_mk_plugins: []
-
-# vim: tabstop=2 expandtab shiftwidth=2 softtabstop=2 smartindent nu ft=yaml
