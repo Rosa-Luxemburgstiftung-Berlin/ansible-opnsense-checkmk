@@ -1,2 +1,3 @@
 skip_list:
   - no-tabs
+  - '203'  # Most files should not contain tabs
