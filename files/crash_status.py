@@ -7,7 +7,7 @@ import glob
 IGNOREFILES = ['minfree', 'minfree.gz', 'bounds', 'bounds.gz',]
 
 g = glob.glob('/var/crash/*')
-c = [ os.path.basename(f) for f in g if os.path.basename(f) not in IGNOREFILES ]
+c = [ os.path.basename(f) for f in g if os.path.basename(f) not in IGNOREFILES and not os.path.islink(f)]
 ecode = 0
 status = 'OK'
 txt = 'no crashes found'
