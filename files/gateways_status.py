@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 smartindent
-
+# pylint: disable=invalid-name,missing-module-docstring
 # inspired from https://github.com/opnsense/core/commit/89cfc06d8eb5e0ee1060ba950e89ff66f745c81f
 
 import json
