@@ -5,7 +5,10 @@
 
 Ansible role for opnsense installing check_mk agent.
 
-It includes a local check for gateway status monitoring.
+It includes some local checks:
+
+  * gateway status monitoring
+  * crash detection
 
 ## Role Variables
 
