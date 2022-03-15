@@ -29,3 +29,21 @@ The role requires to be run after https://github.com/Rosa-Luxemburgstiftung-Berl
 ### Notes
 
 The role must be run as root or w/ `become: true`.
+
+### Sample Playbook
+
+```yaml
+- name: opnsense
+  hosts: opnsense
+  vars:
+    ansible_become: false
+  roles:
+    - role: ansible-opnsense-facts
+      tags:
+        - opnsense
+        - facts
+    - role: ansible-opnsense-checkmk
+      tags:
+        - opnsense
+        - checkmk
+```
