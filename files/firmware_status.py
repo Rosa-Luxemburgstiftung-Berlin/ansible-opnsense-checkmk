@@ -23,6 +23,8 @@ warn_days = 1
 crit_days = 14
 # ignore release candidate versions
 ignore_rc = True
+# fetch new changelogs once X day(s)
+fetch_changelog_days = 1
 
 cfg_file = '%s.%s' % (os.path.splitext(os.path.abspath(__file__))[0], 'yml',)
 
@@ -35,8 +37,27 @@ try:
             crit_days = int(cfg['crit_days'])
         if 'ignore_rc' in cfg:
             ignore_rc = bool(cfg['ignore_rc'])
+        if 'fetch_changelog_days' in cfg:
+            fetch_changelog_days = int(cfg['fetch_changelog_days'])
 except FileNotFoundError:
     pass
+
+today = datetime.today()
+
+# test if we must fetch changelog
+fetchchangelog = False
+try:
+    lastchangelogfetch = os.path.getmtime('/usr/local/opnsense/changelog/index.json')
+    ddiff = today - datetime.fromtimestamp(lastchangelogfetch)
+    if ddiff.days >= fetch_changelog_days:
+        pr = subprocess.run(
+                ['/usr/local/opnsense/scripts/firmware/changelog.sh', 'fetch'],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=True
+            )
+except OSError:
+    fetchchangelog = True
 
 pr = subprocess.run(
         ['opnsense-version', '-v'],
@@ -73,7 +94,6 @@ for verd in jverlist:
 
 if nextversion:
     nextverdt = datetime.strptime(nextversion['date'], '%B %d, %Y')
-    today = datetime.today()
     ddiff = today - nextverdt
     ddiffdays = ddiff.days
     if ddiffdays > crit_days:
