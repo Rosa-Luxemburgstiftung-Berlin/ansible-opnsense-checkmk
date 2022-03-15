@@ -20,7 +20,10 @@ It includes some local checks:
 
 ### Check_MK Agent
 
-Download the **Check_MK Agent for FreeBSD** from your check_mk instance (https://yourCheckMK/check_mk/wato.py?folder=&mode=download_agents) to `files/check_mk_agent.freebsd`.
+Download the **Check_MK Agent for FreeBSD** from
+  * your check_mk instance (https://yourCheckMK/check_mk/wato.py?folder=&mode=download_agents)
+  * or https://raw.githubusercontent.com/tribe29/checkmk/master/agents/check_mk_agent.freebsd
+to `files/check_mk_agent.freebsd`.
 
 ### opnsense-facts
 
