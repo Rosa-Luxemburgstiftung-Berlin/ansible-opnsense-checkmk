@@ -2,15 +2,41 @@
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 smartindent
 # pylint: disable=invalid-name,missing-module-docstring
 
+import os
 from datetime import datetime
 import subprocess
 import json
+import yaml
 from pkg_resources import packaging
 
-# TODO: make this configurable via a cfg file
+####################################################
+# these cfg settings can be set via a cfg file
+# placed in the same directory as the script and
+# with the same name, but the *.yml extension
+# using yaml syntax:
+# warn_days: 14
+# crit_days: 30
+#####################################################
+# warn if the outstanding update is older then X days
 warn_days = 1
+# critical if the outstanding update is older then X days
 crit_days = 14
+# ignore release candidate versions
 ignore_rc = True
+
+cfg_file = '%s.%s' % (os.path.splitext(os.path.abspath(__file__))[0], 'yml',)
+
+try:
+    with open(cfg_file, "r") as ymlfile:
+        cfg = yaml.load(ymlfile)
+        if 'warn_days' in cfg:
+            warn_days = cfg['warn_days']
+        if 'crit_days' in cfg:
+            crit_days = cfg['crit_days']
+        if 'ignore_rc' in cfg:
+            ignore_rc = cfg['ignore_rc']
+except FileNotFoundError:
+    pass
 
 pr = subprocess.run(
         ['opnsense-version', '-v'],
