@@ -18,7 +18,7 @@ jobs:
       - name: install pylint
         run: |
           python -m pip install --upgrade pip
-          pip install pylint==2.7.2 yaml
+          pip install pylint==2.7.2 pyyaml
       - name: run pylint
         run: |
           pylint files/*.py
