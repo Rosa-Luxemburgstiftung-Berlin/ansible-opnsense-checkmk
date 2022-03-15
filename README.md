@@ -10,6 +10,7 @@ It includes some local checks:
 
   * gateway status monitoring
   * crash detection
+  * firmware update status
 
 ## Role Variables
 
