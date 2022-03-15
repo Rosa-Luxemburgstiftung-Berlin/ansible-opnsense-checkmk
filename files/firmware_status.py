@@ -28,13 +28,13 @@ cfg_file = '%s.%s' % (os.path.splitext(os.path.abspath(__file__))[0], 'yml',)
 
 try:
     with open(cfg_file, "r") as ymlfile:
-        cfg = yaml.load(ymlfile)
+        cfg = yaml.load(ymlfile, Loader=yaml.BaseLoader)
         if 'warn_days' in cfg:
-            warn_days = cfg['warn_days']
+            warn_days = int(cfg['warn_days'])
         if 'crit_days' in cfg:
-            crit_days = cfg['crit_days']
+            crit_days = int(cfg['crit_days'])
         if 'ignore_rc' in cfg:
-            ignore_rc = cfg['ignore_rc']
+            ignore_rc = bool(cfg['ignore_rc'])
 except FileNotFoundError:
     pass
 
