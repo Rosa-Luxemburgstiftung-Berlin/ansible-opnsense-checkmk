@@ -50,14 +50,17 @@ try:
     lastchangelogfetch = os.path.getmtime('/usr/local/opnsense/changelog/index.json')
     ddiff = today - datetime.fromtimestamp(lastchangelogfetch)
     if ddiff.days >= fetch_changelog_days:
-        pr = subprocess.run(
-                ['/usr/local/opnsense/scripts/firmware/changelog.sh', 'fetch'],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                check=True
-            )
+        fetchchangelog = True
 except OSError:
     fetchchangelog = True
+
+if fetchchangelog:
+    pr = subprocess.run(
+            ['/usr/local/opnsense/scripts/firmware/changelog.sh', 'fetch'],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True
+        )
 
 pr = subprocess.run(
         ['opnsense-version', '-v'],
