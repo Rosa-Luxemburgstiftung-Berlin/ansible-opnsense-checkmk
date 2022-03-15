@@ -14,6 +14,7 @@ opn_check_mk_port: 6556
 opn_check_mk_local_checks:
   - gateways_status.py
   - crash_status.py
+  - firmware_status.py
 
 # add here some plugin files (and add them to files/ too!
 # for example:
