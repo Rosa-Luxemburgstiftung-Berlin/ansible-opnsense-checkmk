@@ -68,7 +68,7 @@ pr = subprocess.run(
         stderr=subprocess.PIPE,
         check=True
     )
-opn_version = pr.stdout.decode().split('_')[0]
+opn_version = pr.stdout.decode().split('_')[0].strip()
 opnver = packaging.version.parse(opn_version)
 
 ecode = 0
