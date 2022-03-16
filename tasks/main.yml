@@ -38,6 +38,14 @@
   with_items: "{{ opn_check_mk_local_checks }}"
   when: opn_install_check_mk
 
+- name: copy check_mk additional files
+  copy:
+    src: "{{ item.key }}"
+    dest: "{{ item.value }}"
+    mode: 0600
+  with_dict: "{{ opn_check_mk_additional_files }}"
+  when: opn_install_check_mk
+
 - name: enable check_mk_agent in /etc/inetd.conf
   lineinfile:
     path: /etc/inetd.conf

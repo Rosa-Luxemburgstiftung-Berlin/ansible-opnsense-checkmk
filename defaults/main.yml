@@ -16,6 +16,12 @@ opn_check_mk_local_checks:
   - crash_status.py
   - firmware_status.py
 
+# dict of additional files: file name => dest
+# example:
+# opn_check_mk_additional_files:
+#   firmware_status.yml: "{{ opn_check_mk_lib_dir }}//local/"
+opn_check_mk_additional_files: {}
+
 # add here some plugin files (and add them to files/ too!
 # for example:
 # https://raw.githubusercontent.com/zerwes/check_mk_extensions/wireguard-fix-plugin-interpreter/wireguard/agents/plugins/wireguard
