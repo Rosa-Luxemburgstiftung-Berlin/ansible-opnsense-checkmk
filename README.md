@@ -4,7 +4,7 @@
 
 # ansible-opnsense-checkmk
 
-Ansible role for opnsense installing [check_mk](https://checkmk.com/) agent.
+Ansible role installing [check_mk](https://checkmk.com/) agent on [opnsense](https://opnsense.org/).
 
 It includes some local checks:
 
