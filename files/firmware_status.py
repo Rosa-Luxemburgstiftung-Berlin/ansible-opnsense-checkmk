@@ -105,7 +105,11 @@ if nextversion:
     elif ddiffdays > warn_days:
         ecode = 1
         status = 'WARNING'
-    txt = 'update to %s available since %s days' % (nextversion['version'], ddiffdays,)
+    txt = 'update %s to %s available since %s days' % (
+                            opn_version,
+                            nextversion['version'],
+                            ddiffdays,
+                        )
     if latestversion and not latestversion == nextversion:
         txt = '%s (latest version: %s)' % (txt, latestversion['version'],)
 
