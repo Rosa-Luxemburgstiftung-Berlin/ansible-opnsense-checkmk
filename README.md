@@ -8,9 +8,10 @@ Ansible role installing [check_mk](https://checkmk.com/) agent on [opnsense](htt
 
 It includes some local checks:
 
-  * gateway status monitoring
+  * gateway status
   * crash detection
-  * firmware update status
+  * firmware and package update status
+  * package audit
 
 ## Role Variables
 
