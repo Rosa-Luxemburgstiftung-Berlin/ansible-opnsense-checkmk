@@ -14,6 +14,16 @@ import yaml
 #   version: VERSION
 #   issues:
 #       - issue description as found running `pkg audit`
+# example:
+# ---
+# cyrus-sasl:
+#   version: 2.1.27_2
+#   issues:
+#     - cyrus-sasl -- Fix off by one error
+# openssl:
+#   version: 1.1.1m_1,1
+#   issues:
+#     - OpenSSL -- Infinite loop in BN_mod_sqrt parsing certificates
 
 cfg_file = '%s.%s' % (os.path.splitext(os.path.abspath(__file__))[0], 'yml',)
 vulnack = None
@@ -41,7 +51,7 @@ for package, data in vulnx['packages'].items():
         vulns[package]['issues'].append(issue['description'])
 
 if vulnack:
-    for package, data in vulns.items():
+    for package in list(vulns.keys()):
         if package in vulnack:
             for ackeddescr in vulnack[package]['issues']:
                 vulns[package]['issues'].remove(ackeddescr)
@@ -49,13 +59,17 @@ if vulnack:
             vulns.pop(package)
 
 unacked = len(vulns)
-warntxt = ''
+unackedissues = []
 for package, data in vulns.items():
-    warntxt += '; '.join(data['issues'])
+    for issue in data['issues']:
+        unackedissues.append(issue)
+warntxt = '; '.join(unackedissues)
 
 ecode = 0
 status = 'OK'
 txt = 'no vulnerable packages found'
+if vuln_pkg_count > 0:
+    txt = 'no unacknowledged vulnerable packages found'
 if unacked > 0:
     ecode = 1
     status = 'WARNING'
