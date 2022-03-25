@@ -16,10 +16,10 @@ import yaml
 #       - issue description as found running `pkg audit`
 
 cfg_file = '%s.%s' % (os.path.splitext(os.path.abspath(__file__))[0], 'yml',)
-cfg = None
+vulnack = None
 try:
     with open(cfg_file, "r") as ymlfile:
-        cfg = yaml.load(ymlfile, Loader=yaml.BaseLoader)
+        vulnack = yaml.load(ymlfile, Loader=yaml.BaseLoader)
 except FileNotFoundError:
     pass
 
@@ -31,24 +31,35 @@ pr = subprocess.run(
     )
 vulnx = json.loads(pr.stdout)
 vuln_pkg_count = vulnx['pkg_count']
-unacked = vuln_pkg_count
 
+vulns = {}
 for package, data in vulnx['packages'].items():
-    if cfg and package in cfg:
-        if cfg[package]['version'] == data['version']:
-            issue_count = data['issue_count']
-            for issue in data['issues']:
-                if issue['description'] in cfg[package]['version']['issues']:
-                    issue_count = issue_count - 1
-            if issue_count == 0:
-                unacked = unacked -1
+    vulns[package] = {}
+    vulns[package]['version'] = data['version']
+    vulns[package]['issues'] = []
+    for issue in data['issues']:
+        vulns[package]['issues'].append(issue['description'])
+
+if vulnack:
+    for package, data in vulns.items():
+        if package in vulnack:
+            for ackeddescr in vulnack[package]['issues']:
+                vulns[package]['issues'].remove(ackeddescr)
+        if len(vulns[package]['issues']) == 0:
+            vulns.pop(package)
+
+unacked = len(vulns)
+warntxt = ''
+for package, data in vulns.items():
+    warntxt += '; '.join(data['issues'])
+
 ecode = 0
 status = 'OK'
 txt = 'no vulnerable packages found'
 if unacked > 0:
     ecode = 1
     status = 'WARNING'
-    txt = f'unacknowledged vulnerable packages: {unacked}'
+    txt = f'unacknowledged vulnerable packages: {unacked} ({warntxt})'
 
 print(
         '%s PKGAUDIT vulnpackages=%s;;;;|acked=%s;;;; %s - %s' %
