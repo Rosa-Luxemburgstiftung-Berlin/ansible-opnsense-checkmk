@@ -3,6 +3,7 @@
 # pylint: disable=invalid-name,missing-module-docstring
 
 import os
+import sys
 from datetime import datetime
 import subprocess
 import json
@@ -26,6 +27,9 @@ ignore_rc = True
 # fetch new changelogs once X day(s)
 fetch_changelog_days = 1
 
+# perform a pkg update test
+pkg_update_test = True
+
 cfg_file = '%s.%s' % (os.path.splitext(os.path.abspath(__file__))[0], 'yml',)
 
 try:
@@ -39,6 +43,8 @@ try:
             ignore_rc = bool(cfg['ignore_rc'])
         if 'fetch_changelog_days' in cfg:
             fetch_changelog_days = int(cfg['fetch_changelog_days'])
+        if 'pkg_update_test' in cfg:
+            pkg_update_test = bool(cfg['pkg_update_test'])
 except FileNotFoundError:
     pass
 
@@ -105,8 +111,53 @@ if nextversion:
     elif ddiffdays > warn_days:
         ecode = 1
         status = 'WARNING'
-    txt = 'update to %s available since %s days' % (nextversion['version'], ddiffdays,)
+    txt = 'update %s to %s available since %s days' % (
+                            opn_version,
+                            nextversion['version'],
+                            ddiffdays,
+                        )
     if latestversion and not latestversion == nextversion:
         txt = '%s (latest version: %s)' % (txt, latestversion['version'],)
 
 print('%s FIRMWARE - %s - %s' % (ecode, status, txt))
+
+if not pkg_update_test:
+    sys.exit(0)
+
+pr = subprocess.run(
+        ['pkg', 'upgrade', '--dry-run'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False
+    )
+pkgcounters = {
+        'upgraded':  0,
+        'installed': 0,
+        'reinstalled': 0,
+        'removed': 0,
+    }
+olines = pr.stdout.splitlines()
+pkgperfdata = ''
+for pcounter in pkgcounters:
+    expectline = 'Number of packages to be %s: ' % pcounter
+    for line in olines:
+        line = line.decode()
+        if line.startswith(expectline):
+            pkgcounters[pcounter] = int(line.split(': ')[1])
+            break
+    if len(pkgperfdata) > 0:
+        pkgperfdata = '%s|' % pkgperfdata
+    pkgperfdata = '%s%s=%s;;;;' % (pkgperfdata, pcounter, pkgcounters[pcounter])
+
+pkgecode = 0
+pkgstatus = 'OK'
+pkgtxt = 'all packages up to date'
+if pkgcounters['upgraded'] > 0:
+    pkgecode = 1
+    pkgstatus = 'WARNING'
+    pkgtxt = f'required pkg actions: {pkgcounters}'
+    if ecode > 0:
+        pkgecode = 1
+        pkgstatus = 'CRITICAL'
+
+print('%s PACKAGES %s %s - %s' % (pkgecode, pkgperfdata, pkgstatus, pkgtxt))
