@@ -54,7 +54,8 @@ if vulnack:
     for package in list(vulns.keys()):
         if package in vulnack:
             for ackeddescr in vulnack[package]['issues']:
-                vulns[package]['issues'].remove(ackeddescr)
+                if ackeddescr in vulns[package]['issues']:
+                    vulns[package]['issues'].remove(ackeddescr)
         if len(vulns[package]['issues']) == 0:
             vulns.pop(package)
 
