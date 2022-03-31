@@ -15,6 +15,7 @@ opn_check_mk_local_checks:
   - gateways_status.py
   - crash_status.py
   - firmware_status.py
+  - pkg_audit.py
 
 # dict of additional files: file name => dest
 # example:
