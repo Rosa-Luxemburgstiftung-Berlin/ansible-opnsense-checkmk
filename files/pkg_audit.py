@@ -10,8 +10,8 @@ import json
 import yaml
 
 __doc__ = """
-checkmk local check performing a pkg audit
-on freebsd / opnsense
+checkmk local check performin a pak audit on
+freebsd / opnsense
 """
 
 # you can acknowledge each vulnerable package by using a cfg file
@@ -28,6 +28,11 @@ on freebsd / opnsense
 # openssl:
 #   issues:
 #     - OpenSSL -- Infinite loop in BN_mod_sqrt parsing certificates
+
+class MyDumper(yaml.Dumper):
+    """simple helper class fixing pyyamls list indent"""
+    def increase_indent(self, flow=False, indentless=False):
+        return super(MyDumper, self).increase_indent(flow, False)
 
 argparser = argparse.ArgumentParser(description=__doc__)
 argparser.add_argument(
@@ -70,7 +75,18 @@ for package, data in vulnx['packages'].items():
         vulns[package]['issues'].append(issue['description'])
 
 if args.print_config_file:
-    print(yaml.safe_dump(vulns))
+    print(
+        yaml.dump(
+            vulns,
+	    Dumper=MyDumper,
+	    sort_keys=True,
+	    indent=2,
+	    width=70,
+	    explicit_start=True,
+	    explicit_end=True,
+	    default_flow_style=False
+            )
+	)
     sys.exit(0)
 
 if vulnack:
