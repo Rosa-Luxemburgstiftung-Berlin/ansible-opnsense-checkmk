@@ -3,9 +3,16 @@
 # pylint: disable=invalid-name,missing-module-docstring
 
 import os
+import sys
 import subprocess
+import argparse
 import json
 import yaml
+
+__doc__ = """
+checkmk local check performin a pak audit on
+freebsd / opnsense
+"""
 
 # you can acknowledge each vulnerable package by using a cfg file
 # placed in the same directory as the script and with the same name,
@@ -22,7 +29,23 @@ import yaml
 #   issues:
 #     - OpenSSL -- Infinite loop in BN_mod_sqrt parsing certificates
 
-cfg_file = '%s.%s' % (os.path.splitext(os.path.abspath(__file__))[0], 'yml',)
+argparser = argparse.ArgumentParser(description=__doc__)
+argparser.add_argument(
+    '-c', '--config-file',
+    type=str,
+    dest='configfile', action='store',
+    default='%s.%s' % (os.path.splitext(os.path.abspath(__file__))[0], 'yml',),
+    help='path to yaml config file for acknowledging audit vulnerable package'
+    )
+argparser.add_argument(
+    '-p', '--print-config-file',
+    action="store_true",
+    help='do not perform a real check, just print a current config'
+    )
+
+args = argparser.parse_args()
+
+cfg_file = args.configfile
 vulnack = None
 try:
     with open(cfg_file, "r") as ymlfile:
@@ -45,6 +68,10 @@ for package, data in vulnx['packages'].items():
     vulns[package]['issues'] = []
     for issue in data['issues']:
         vulns[package]['issues'].append(issue['description'])
+
+if args.print_config_file:
+    print(yaml.safe_dump(vulns))
+    sys.exit(0)
 
 if vulnack:
     for package in list(vulns.keys()):
