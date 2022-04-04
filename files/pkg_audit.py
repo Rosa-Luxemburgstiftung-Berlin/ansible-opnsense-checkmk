@@ -11,17 +11,14 @@ import yaml
 # placed in the same directory as the script and with the same name,
 # but the *.yml extension using yaml syntax:
 # package-name:
-#   version: VERSION
 #   issues:
 #       - issue description as found running `pkg audit`
 # example:
 # ---
 # cyrus-sasl:
-#   version: 2.1.27_2
 #   issues:
 #     - cyrus-sasl -- Fix off by one error
 # openssl:
-#   version: 1.1.1m_1,1
 #   issues:
 #     - OpenSSL -- Infinite loop in BN_mod_sqrt parsing certificates
 
@@ -45,7 +42,6 @@ vuln_pkg_count = vulnx['pkg_count']
 vulns = {}
 for package, data in vulnx['packages'].items():
     vulns[package] = {}
-    vulns[package]['version'] = data['version']
     vulns[package]['issues'] = []
     for issue in data['issues']:
         vulns[package]['issues'].append(issue['description'])
