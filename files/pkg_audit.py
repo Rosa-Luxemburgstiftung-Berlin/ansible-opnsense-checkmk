@@ -10,8 +10,8 @@ import json
 import yaml
 
 __doc__ = """
-checkmk local check performin a pak audit on
-freebsd / opnsense
+checkmk local check performing a pkg audit
+on freebsd / opnsense
 """
 
 # you can acknowledge each vulnerable package by using a cfg file
