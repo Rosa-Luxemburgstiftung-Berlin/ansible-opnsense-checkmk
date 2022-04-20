@@ -20,7 +20,7 @@ opn_check_mk_local_checks:
 # dict of additional files: file name => dest
 # example:
 # opn_check_mk_additional_files:
-#   firmware_status.yml: "{{ opn_check_mk_lib_dir }}//local/"
+#   firmware_status.yml: "{{ opn_check_mk_lib_dir }}/local/"
 opn_check_mk_additional_files: {}
 
 # add here some plugin files (and add them to files/ too!
