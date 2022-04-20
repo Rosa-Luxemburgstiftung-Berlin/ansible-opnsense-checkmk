@@ -68,11 +68,12 @@ vulnx = json.loads(pr.stdout)
 vuln_pkg_count = vulnx['pkg_count']
 
 vulns = {}
-for package, data in vulnx['packages'].items():
-    vulns[package] = {}
-    vulns[package]['issues'] = []
-    for issue in data['issues']:
-        vulns[package]['issues'].append(issue['description'])
+if vuln_pkg_count > 0:
+    for package, data in vulnx['packages'].items():
+        vulns[package] = {}
+        vulns[package]['issues'] = []
+        for issue in data['issues']:
+            vulns[package]['issues'].append(issue['description'])
 
 if args.print_config_file:
     print(
