@@ -49,7 +49,7 @@
 - name: enable check_mk_agent in /etc/inetd.conf
   lineinfile:
     path: /etc/inetd.conf
-    line: "check_mk  stream  tcp nowait  root  {{ opn_check_mk_path }}"
+    line: "check_mk  stream  tcp nowait  root  {{ opn_check_mk_path }} {{ opn_check_mk_path | basename }}"
     regexp: "^check_mk "
   notify: service inetd
   when: opn_install_check_mk
