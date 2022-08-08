@@ -12,10 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: run ansible-lint
-        uses: ansible/ansible-lint-action@v4-eol
+        uses: ansible/ansible-lint-action@main
         with:
           override-deps: |
             rich>=9.5.1,<11.0.0
-            ansible==5.3.0
-            ansible-lint==5.3.1
+            ansible==6.2.0
+            ansible-lint==6.4.0
           targets: "./"

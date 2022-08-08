@@ -1,7 +1,7 @@
 ---
 
 - name: service inetd
-  service:
+  ansible.builtin.service:
     name: inetd
     state: restarted
 
