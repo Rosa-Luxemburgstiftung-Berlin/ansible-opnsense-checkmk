@@ -79,14 +79,14 @@ if args.print_config_file:
     print(
         yaml.dump(
             vulns,
-	    Dumper=MyDumper,
-	    sort_keys=True,
-	    indent=2,
-	    width=70,
-	    explicit_start=True,
-	    explicit_end=True,
-	    default_flow_style=False
-            )
+            Dumper=MyDumper,
+            sort_keys=True,
+            indent=2,
+            width=70,
+            explicit_start=True,
+            explicit_end=True,
+            default_flow_style=False
+        )
 	)
     sys.exit(0)
 
