@@ -87,7 +87,7 @@ if args.print_config_file:
             explicit_end=True,
             default_flow_style=False
         )
-	)
+    )
     sys.exit(0)
 
 if vulnack:
