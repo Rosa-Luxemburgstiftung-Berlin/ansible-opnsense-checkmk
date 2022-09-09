@@ -103,7 +103,7 @@ unacked = len(vulns)
 unackedissues = []
 for package, data in vulns.items():
     for issue in data['issues']:
-        unackedissues.append(issue)
+        unackedissues.append(f'{package}: {issue}')
 warntxt = '; '.join(unackedissues)
 
 ecode = 0
