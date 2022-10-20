@@ -73,7 +73,7 @@ if vuln_pkg_count > 0:
         vulns[package] = {}
         vulns[package]['issues'] = []
         for issue in data['issues']:
-            vulns[package]['issues'].append(issue['description'])
+            vulns[package]['issues'].append(issue['description'].lower())
 
 if args.print_config_file:
     print(
@@ -94,6 +94,7 @@ if vulnack:
     for package in list(vulns.keys()):
         if package in vulnack:
             for ackeddescr in vulnack[package]['issues']:
+                ackeddescr = ackeddescr.lower()
                 if ackeddescr in vulns[package]['issues']:
                     vulns[package]['issues'].remove(ackeddescr)
         if len(vulns[package]['issues']) == 0:
