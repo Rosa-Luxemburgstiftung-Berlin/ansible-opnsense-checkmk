@@ -12,6 +12,7 @@ It includes some local checks:
   * crash detection
   * firmware and package update status
   * package audit
+  * pfctl status
 
 ## Role Variables
 
