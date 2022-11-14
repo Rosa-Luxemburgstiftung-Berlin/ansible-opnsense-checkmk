@@ -16,6 +16,7 @@ opn_check_mk_local_checks:
   - crash_status.py
   - firmware_status.py
   - pkg_audit.py
+  - pfctl_status.sh
 
 # dict of additional files: file name => dest
 # example:
