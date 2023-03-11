@@ -155,7 +155,7 @@ pkgtxt = 'all packages up to date'
 if pkgcounters['upgraded'] > 0:
     pkgecode = 1
     pkgstatus = 'WARNING'
-    pkgtxt = f'required pkg actions: {pkgcounters}'
+    pkgtxt = 'packages actions required'
     if ecode > 0:
         pkgecode = 1
         pkgstatus = 'CRITICAL'
