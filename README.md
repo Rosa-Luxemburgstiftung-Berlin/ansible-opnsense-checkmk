@@ -6,13 +6,80 @@
 
 Ansible role installing [check_mk](https://checkmk.com/) agent on [opnsense](https://opnsense.org/).
 
-It includes some local checks:
+## Local Checks
+The role includes some local checks:
 
-  * gateway status
-  * crash detection
-  * firmware and package update status
-  * package audit
-  * pfctl status
+## gateway status
+
+Check all configured gateways; one check is created per configured gateway
+
+Sample output:
+```
+GWSTATUS-GW-WAN OK - GW_WAN (192.168.1.1) : Online
+```
+
+## crash detection
+
+Check if a crash placed some file in `/var/crash/`;
+
+Sample output:
+```
+0 CRASHSTATUS crashes=0 OK - no crashes found
+```
+
+## firmware and package update status
+
+Check if there are some updates available;
+
+Sample output:
+```
+FIRMWARE OK - update 23.1.2 to 23.1.3 available since 1 days
+PACKAGES WARNING - packages actions required
+```
+This check can be configured using a file `/usr/local/lib/check_mk_agent/local/firmware_status.yml`.
+You can distribute this file by defining
+```
+opn_check_mk_additional_files:
+  firmware_status.yml: "{{ opn_check_mk_lib_dir }}/local/"
+```
+Configurable vars:
+  * `warn_days`: warn if the outstanding update is older then X days; default: 1
+  * `crit_days`: critical if the outstanding update is older then X days; default: 14
+  * `ignore_rc`: ignore release candidate versions; default: True
+  * `fetch_changelog_days`: fetch new changelogs once X day(s); default: 1
+  * `pkg_update_test`: perform a pkg update test; if set to `False`, the `PACKAGES` will be skipped; default: True
+
+## package audit
+
+Audit installed packages against known vulnerabilities.
+
+Sample output:
+```
+PKGAUDIT OK - no unacknowledged vulnerable packages found
+```
+
+You can acknowledge some package vulnerabilties using a `pkg_audit.yml` file; this can be distributed by defining
+```
+opn_check_mk_additional_files:
+  pkg_audit.yml: "{{ opn_check_mk_lib_dir }}/local/"
+```
+A sample `pkg_audit.yml` can be generated using:
+```
+# /usr/local/lib/check_mk_agent/local/pkg_audit.py -p
+---
+curl:
+  issues:
+    - curl -- multiple vulnerabilities
+...
+```
+
+## pfctl status
+Check for problems in the current **pf** rule definitions;
+
+Sample output:
+```
+PFCTLSTATUS - OK - pfctl rules OK
+```
 
 ## Role Variables
 
