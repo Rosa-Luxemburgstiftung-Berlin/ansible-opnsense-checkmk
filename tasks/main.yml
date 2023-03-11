@@ -6,7 +6,7 @@
 
 - name: copy check_mk_agent
   ansible.builtin.copy:
-    src: check_mk_agent.freebsd
+    src: "{{ checkmk_agent_name }}"
     dest: "{{ opn_check_mk_path }}"
     mode: 0700
   notify: service inetd
