@@ -22,6 +22,7 @@ opn_check_mk_local_checks:
 # example:
 # opn_check_mk_additional_files:
 #   firmware_status.yml: "{{ opn_check_mk_lib_dir }}/local/"
+#   pkg_audit.yml: "{{ opn_check_mk_lib_dir }}/local/"
 opn_check_mk_additional_files: {}
 
 # add here some plugin files (and add them to files/ too!
