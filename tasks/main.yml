@@ -4,13 +4,36 @@
     name: "{{ opn_packages }}"
     state: present
 
-- name: copy check_mk_agent
+- name: install {{ checkmk_agent_name }} from server
+  block:
+    - name: download {{ checkmk_agent_name }} from server
+      delegate_to: localhost
+      check_mode: false
+      ansible.builtin.get_url:
+        url: "{{ checkmk_proto }}://{{ checkmk_hostname }}/{{ checkmk_path }}/{{ checkmk_agent_name }}"
+        dest: "{{ _local_tmp }}/{{ checkmk_agent_name }}"
+        force: false
+        mode: 0600
+
+    - name: copy {{ checkmk_agent_name }} from {{ _local_tmp }}
+      ansible.builtin.copy:
+        src: "{{ _local_tmp }}/{{ checkmk_agent_name }}"
+        dest: "{{ opn_check_mk_path }}"
+        mode: 0700
+      notify: service inetd
+  when:
+    - opn_install_check_mk | bool
+    - checkmk_hostname is defined
+
+- name: copy {{ checkmk_agent_name }} from local files
   ansible.builtin.copy:
     src: "{{ checkmk_agent_name }}"
     dest: "{{ opn_check_mk_path }}"
     mode: 0700
   notify: service inetd
-  when: opn_install_check_mk
+  when:
+    - opn_install_check_mk
+    - checkmk_hostname is not defined
 
 - name: create lib dirs
   ansible.builtin.file:
