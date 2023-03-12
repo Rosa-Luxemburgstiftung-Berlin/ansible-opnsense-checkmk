@@ -105,6 +105,8 @@ The role requires to be run after https://github.com/Rosa-Luxemburgstiftung-Berl
 
 The role must be run as root or w/ `become: true`.
 
+And, of course, you will need to create a packet filter rule to allow connections from your checkmk server to the opnsense firewall on port 6556.
+
 ### Sample Playbook
 
 ```yaml
