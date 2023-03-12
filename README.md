@@ -89,7 +89,7 @@ PFCTLSTATUS - OK - pfctl rules OK
 
 ### Check_MK Agent
 
-Download the **Check_MK Agent for FreeBSD** from
+The role can download the **Check_MK Agent for FreeBSD** from your checkmk server instance (see `checkmk_hostname`, `checkmk_path` and `checkmk_proto` in [defaults/main.yml](defaults/main.yml)) or you can download it on your own from
   * your check_mk instance (https://yourCheckMK/check_mk/wato.py?folder=&mode=download_agents)
   * or https://raw.githubusercontent.com/tribe29/checkmk/master/agents/check_mk_agent.freebsd
 to `files/check_mk_agent.freebsd`.
