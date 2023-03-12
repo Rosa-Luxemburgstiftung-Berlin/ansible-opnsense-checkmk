@@ -14,14 +14,8 @@ opn_packages:
 # protocoll used by the server (http|https)
 checkmk_proto: http
 
-# IP of the checkmk server
-# required for limiting the access to the agent via xinetd,
-# as it will be added to the 'only_from' xinetd config line.
-# configure this to your needs!
-checkmk_ip: 127.0.0.1
-
 # path part of the uri to get the agents from the checkmk server
-# mostli SITENAME/check_mk/agents
+# mostly SITENAME/check_mk/agents
 checkmk_path: "SITENAME/check_mk/agents"
 
 # agent name
