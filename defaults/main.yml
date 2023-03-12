@@ -5,6 +5,29 @@ opn_packages:
   - ipmitool
   - libstatgrab
 
+# in order to fetch the latest check_mk_agent.freebsd from a running checkmk server
+# define the hostname of the checkmk server;
+# required for fetching the agent from the server;
+# the server must be reacheble from the control machine, not from the target host
+# checkmk_hostname:
+
+# protocoll used by the server (http|https)
+checkmk_proto: http
+
+# IP of the checkmk server
+# required for limiting the access to the agent via xinetd,
+# as it will be added to the 'only_from' xinetd config line.
+# configure this to your needs!
+checkmk_ip: 127.0.0.1
+
+# path part of the uri to get the agents from the checkmk server
+# mostli SITENAME/check_mk/agents
+checkmk_path: "SITENAME/check_mk/agents"
+
+# agent name
+checkmk_agent_name: "check_mk_agent.freebsd"
+## end agent download related VARs
+
 opn_install_check_mk: true
 opn_check_mk_path: /usr/local/sbin/check_mk_agent
 opn_check_mk_lib_dir: /usr/local/lib/check_mk_agent
@@ -29,3 +52,7 @@ opn_check_mk_additional_files: {}
 # for example:
 # https://raw.githubusercontent.com/zerwes/check_mk_extensions/wireguard-fix-plugin-interpreter/wireguard/agents/plugins/wireguard
 opn_check_mk_plugins: []
+
+# set this to "{{ lookup('config', 'DEFAULT_LOCAL_TMP') | dirname }}"
+# to make the playbook multi user aware
+_local_tmp: /var/tmp
