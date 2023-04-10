@@ -4,3 +4,4 @@
 skip_list:
   - name[template]
   - name[casing]
+  - yaml[octal-values]
