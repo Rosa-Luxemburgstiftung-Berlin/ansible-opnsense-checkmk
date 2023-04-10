@@ -3,3 +3,4 @@
 
 skip_list:
   - name[template]
+  - name[casing]
