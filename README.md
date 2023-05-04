@@ -47,7 +47,9 @@ Configurable vars:
   * `crit_days`: critical if the outstanding update is older then X days; default: 14
   * `ignore_rc`: ignore release candidate versions; default: True
   * `fetch_changelog_days`: fetch new changelogs once X day(s); default: 1
+  * `fetch_changelog_timeout`: fetch changelog timeout in seconds; default: 20
   * `pkg_update_test`: perform a pkg update test; if set to `False`, the `PACKAGES` will be skipped; default: True
+  * `pkg_update_timeout`: timeout for pkg update test in seconds; default: 20
 
 ## package audit
 
