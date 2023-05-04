@@ -26,7 +26,8 @@ crit_days = 14
 ignore_rc = True
 # fetch new changelogs once X day(s)
 fetch_changelog_days = 1
-
+# fetch changelog timeout in seconds
+fetch_changelog_timeout = 30
 # perform a pkg update test
 pkg_update_test = True
 
@@ -43,6 +44,8 @@ try:
             ignore_rc = bool(cfg['ignore_rc'])
         if 'fetch_changelog_days' in cfg:
             fetch_changelog_days = int(cfg['fetch_changelog_days'])
+        if 'fetch_changelog_timeout' in cfg:
+            fetch_changelog_timeout = int(cfg['fetch_changelog_timeout'])
         if 'pkg_update_test' in cfg:
             pkg_update_test = bool(cfg['pkg_update_test'])
 except FileNotFoundError:
@@ -67,9 +70,10 @@ if fetchchangelog:
             ['/usr/local/opnsense/scripts/firmware/changelog.sh', 'fetch'],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            timeout=fetch_changelog_timeout,
             check=True
         )
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         emsg = " (changelog fetch failed (!))"
 
 pr = subprocess.run(
