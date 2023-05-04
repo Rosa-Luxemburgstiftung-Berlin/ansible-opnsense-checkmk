@@ -48,6 +48,7 @@ try:
 except FileNotFoundError:
     pass
 
+emsg = ""
 today = datetime.today()
 
 # test if we must fetch changelog
@@ -61,12 +62,15 @@ except OSError:
     fetchchangelog = True
 
 if fetchchangelog:
-    pr = subprocess.run(
+    try:
+        pr = subprocess.run(
             ['/usr/local/opnsense/scripts/firmware/changelog.sh', 'fetch'],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             check=True
         )
+    except subprocess.CalledProcessError:
+        emsg = " (changelog fetch failed (!))"
 
 pr = subprocess.run(
         ['opnsense-version', '-v'],
@@ -119,7 +123,7 @@ if nextversion:
     if latestversion and not latestversion == nextversion:
         txt = '%s (latest version: %s)' % (txt, latestversion['version'],)
 
-print('%s FIRMWARE - %s - %s' % (ecode, status, txt))
+print('%s FIRMWARE - %s - %s %s' % (ecode, status, txt, emsg))
 
 if not pkg_update_test:
     sys.exit(0)
@@ -160,4 +164,4 @@ if pkgcounters['upgraded'] > 0:
         pkgecode = 1
         pkgstatus = 'CRITICAL'
 
-print('%s PACKAGES %s %s - %s' % (pkgecode, pkgperfdata, pkgstatus, pkgtxt))
+print('%s PACKAGES %s %s - %s %s' % (pkgecode, pkgperfdata, pkgstatus, pkgtxt, emsg))
