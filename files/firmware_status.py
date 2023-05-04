@@ -27,9 +27,11 @@ ignore_rc = True
 # fetch new changelogs once X day(s)
 fetch_changelog_days = 1
 # fetch changelog timeout in seconds
-fetch_changelog_timeout = 30
+fetch_changelog_timeout = 20
 # perform a pkg update test
 pkg_update_test = True
+# timeout for pkg update test
+pkg_update_timeout = 20
 
 cfg_file = '%s.%s' % (os.path.splitext(os.path.abspath(__file__))[0], 'yml',)
 
@@ -48,6 +50,8 @@ try:
             fetch_changelog_timeout = int(cfg['fetch_changelog_timeout'])
         if 'pkg_update_test' in cfg:
             pkg_update_test = bool(cfg['pkg_update_test'])
+        if 'pkg_update_timeout' in cfg:
+            pkg_update_timeout = int(cfg['pkg_update_timeout'])
 except FileNotFoundError:
     pass
 
@@ -67,12 +71,12 @@ except OSError:
 if fetchchangelog:
     try:
         pr = subprocess.run(
-            ['/usr/local/opnsense/scripts/firmware/changelog.sh', 'fetch'],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            timeout=fetch_changelog_timeout,
-            check=True
-        )
+                ['/usr/local/opnsense/scripts/firmware/changelog.sh', 'fetch'],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                timeout=fetch_changelog_timeout,
+                check=True
+            )
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         emsg = " (changelog fetch failed (!))"
 
@@ -132,12 +136,18 @@ print('%s FIRMWARE - %s - %s %s' % (ecode, status, txt, emsg))
 if not pkg_update_test:
     sys.exit(0)
 
-pr = subprocess.run(
-        ['pkg', 'upgrade', '--dry-run'],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=False
-    )
+try:
+    pr = subprocess.run(
+            ['pkg', 'upgrade', '--dry-run'],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=pkg_update_timeout,
+            check=False
+        )
+except subprocess.TimeoutExpired:
+    print('3 PACKAGES - UNKNOWN - timeout expired')
+    sys.exit(0)
+
 pkgcounters = {
         'upgraded':  0,
         'installed': 0,
@@ -168,4 +178,4 @@ if pkgcounters['upgraded'] > 0:
         pkgecode = 1
         pkgstatus = 'CRITICAL'
 
-print('%s PACKAGES %s %s - %s %s' % (pkgecode, pkgperfdata, pkgstatus, pkgtxt, emsg))
+print('%s PACKAGES %s %s - %s' % (pkgecode, pkgperfdata, pkgstatus, pkgtxt))
