@@ -21,7 +21,7 @@ if len(c) > 0:
     txt = 'detected crash: %s' % ', '.join(c)
 else:
     if os.path.exists('/tmp/PHP_errors.log'):
-        c = 1
+        c = ['/tmp/PHP_errors.log']
         ecode = 1
         status = "WARNING"
         txt = 'detected php crash'
