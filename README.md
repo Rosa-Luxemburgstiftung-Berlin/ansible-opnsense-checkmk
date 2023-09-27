@@ -83,6 +83,16 @@ Sample output:
 PFCTLSTATUS - OK - pfctl rules OK
 ```
 
+### check powerunit
+
+Check power unit state using dmidecode (one check per unit).
+
+Sample output:
+```
+0 PowerUnitGroup1 - OK - Power Unit Group: 1 Status: Present, OK
+0 PowerUnitGroup2 - OK - Power Unit Group: 2 Status: Present, OK
+```
+
 ## Role Variables
 
 [defaults/main.yml](defaults/main.yml)

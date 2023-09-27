@@ -4,6 +4,7 @@ opn_packages:
   - bash
   - ipmitool
   - libstatgrab
+  - dmidecode
 
 # in order to fetch the latest check_mk_agent.freebsd from a running checkmk server
 # define the hostname of the checkmk server;
