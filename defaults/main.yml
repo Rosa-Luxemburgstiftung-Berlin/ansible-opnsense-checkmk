@@ -35,6 +35,7 @@ opn_check_mk_local_checks:
   - firmware_status.py
   - pkg_audit.py
   - pfctl_status.sh
+  - check_powerunit.sh
 
 # dict of additional files: file name => dest
 # example:
