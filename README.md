@@ -9,7 +9,7 @@ Ansible role installing [check_mk](https://checkmk.com/) agent on [opnsense](htt
 ## Local Checks
 The role includes some local checks:
 
-## gateway status
+### gateway status
 
 Check all configured gateways; one check is created per configured gateway
 
@@ -18,7 +18,7 @@ Sample output:
 GWSTATUS-GW-WAN OK - GW_WAN (192.168.1.1) : Online
 ```
 
-## crash detection
+### crash detection
 
 Check if a crash placed some file in `/var/crash/`;
 
@@ -27,7 +27,7 @@ Sample output:
 0 CRASHSTATUS crashes=0 OK - no crashes found
 ```
 
-## firmware and package update status
+### firmware and package update status
 
 Check if there are some updates available;
 
@@ -51,7 +51,7 @@ Configurable vars:
   * `pkg_update_test`: perform a pkg update test; if set to `False`, the `PACKAGES` will be skipped; default: True
   * `pkg_update_timeout`: timeout for pkg update test in seconds; default: 20
 
-## package audit
+### package audit
 
 Audit installed packages against known vulnerabilities.
 
@@ -75,7 +75,7 @@ curl:
 ...
 ```
 
-## pfctl status
+### pfctl status
 Check for problems in the current **pf** rule definitions;
 
 Sample output:
