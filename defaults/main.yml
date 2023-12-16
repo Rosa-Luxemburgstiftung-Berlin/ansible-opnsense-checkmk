@@ -2,7 +2,7 @@
 # for check_mk you should set at least
 opn_packages:
   - bash
-  - ipmitool
+  - freeipmi
   - libstatgrab
   - dmidecode
 
