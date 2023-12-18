@@ -35,6 +35,15 @@
     - opn_install_check_mk
     - checkmk_hostname is not defined
 
+- name: apply patches
+  ansible.posix.patch:
+    src: "{{ item }}"
+    dest: "{{ opn_check_mk_path }}"
+    remote_src: false
+  with_items: "{{  opn_check_mk_patches | default([]) }}"
+  when:
+    - opn_install_check_mk
+
 - name: create lib dirs
   ansible.builtin.file:
     path: "{{ opn_check_mk_lib_dir }}/{{ item }}"

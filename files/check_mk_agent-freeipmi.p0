@@ -1,0 +1,26 @@
+--- check_mk_agent	2023-12-15 09:32:07.194344000 +0100
++++ /usr/local/sbin/check_mk_agent	2023-12-15 10:25:58.113316000 +0100
+@@ -497,6 +497,23 @@
+             sed -e 's/ *| */|/g' -e "s/ /_/g" -e 's/_*$//' -e 's/|/ /g' |
+             grep -v -E '^[^ ]+ na ' |
+             grep -v ' discrete '
++    elif inpath ipmi-sensors; then
++        echo '<<<ipmi_sensors>>>'
++        if ipmi-sensors --help | grep -q legacy-output; then
++            IPMI_FORMAT="--legacy-output"
++        else
++            IPMI_FORMAT=""
++        fi
++        if ipmi-sensors --help | grep -q " \-\-groups"; then
++            IPMI_GROUP_OPT="-g"
++        else
++            IPMI_GROUP_OPT="-t"
++        fi
++        for class in Temperature Power_Unit Fan; do
++            ipmi-sensors ${IPMI_FORMAT} --sdr-cache-directory /var/cache ${IPMI_GROUP_OPT} "${class}" | sed -e 's/ /_/g' -e 's/:_/ /g' -e 's@ \([^(]*\)_(\([^)]*\))@ \2_\1@'
++            # In case of a timeout immediately leave loop.
++            if [ $? = 255 ]; then break; fi
++        done
+     fi
+ 
+     # State of LSI MegaRAID controller via MegaCli.

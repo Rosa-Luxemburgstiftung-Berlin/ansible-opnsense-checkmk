@@ -2,7 +2,7 @@
 # for check_mk you should set at least
 opn_packages:
   - bash
-  - ipmitool
+  - freeipmi
   - libstatgrab
   - dmidecode
 
@@ -27,6 +27,10 @@ opn_install_check_mk: true
 opn_check_mk_path: /usr/local/sbin/check_mk_agent
 opn_check_mk_lib_dir: /usr/local/lib/check_mk_agent
 opn_check_mk_port: 6556
+
+# patches for the checkmk agent to apply
+opn_check_mk_patches:
+  - check_mk_agent-freeipmi.p0  # https://github.com/Rosa-Luxemburgstiftung-Berlin/ansible-opnsense-checkmk/issues/24
 
 # list of plugins and local checks to install
 opn_check_mk_local_checks:
