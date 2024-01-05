@@ -38,6 +38,7 @@ opn_check_mk_local_checks:
   - crash_status.py
   - firmware_status.py
   - pkg_audit.py
+  - pkg_check.sh
   - pfctl_status.sh
   - check_powerunit.sh
 
