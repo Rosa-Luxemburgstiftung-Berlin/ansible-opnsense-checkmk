@@ -75,6 +75,15 @@ curl:
 ...
 ```
 
+### package dependencies check
+
+check installed packages for missing dependencies
+
+Sample output:
+```
+PCK_CHECK_DEPENDENCIES - OK -
+```
+
 ### pfctl status
 Check for problems in the current **pf** rule definitions;
 
