@@ -9,11 +9,11 @@
     - name: download {{ checkmk_agent_name }} from server
       delegate_to: localhost
       check_mode: false
+      run_once: true
       ansible.builtin.get_url:
         url: "{{ checkmk_proto }}://{{ checkmk_hostname }}/{{ checkmk_path }}/{{ checkmk_agent_name }}"
         dest: "{{ _local_tmp }}/{{ checkmk_agent_name }}"
-        force: false
-        mode: 0600
+        mode: "0600"
 
     - name: copy {{ checkmk_agent_name }} from {{ _local_tmp }}
       ansible.builtin.copy:
