@@ -15,6 +15,16 @@
         dest: "{{ _local_tmp }}/{{ checkmk_agent_name }}"
         mode: "0600"
 
+    - name: apply patches
+      delegate_to: localhost
+      check_mode: false
+      run_once: true
+      ansible.posix.patch:
+        src: "{{ item }}"
+        dest: "{{ _local_tmp }}/{{ checkmk_agent_name }}"
+        remote_src: false
+      with_items: "{{  opn_check_mk_patches | default([]) }}"
+
     - name: copy {{ checkmk_agent_name }} from {{ _local_tmp }}
       ansible.builtin.copy:
         src: "{{ _local_tmp }}/{{ checkmk_agent_name }}"
@@ -34,15 +44,6 @@
   when:
     - opn_install_check_mk
     - checkmk_hostname is not defined
-
-- name: apply patches
-  ansible.posix.patch:
-    src: "{{ item }}"
-    dest: "{{ opn_check_mk_path }}"
-    remote_src: false
-  with_items: "{{  opn_check_mk_patches | default([]) }}"
-  when:
-    - opn_install_check_mk
 
 - name: create lib dirs
   ansible.builtin.file:
