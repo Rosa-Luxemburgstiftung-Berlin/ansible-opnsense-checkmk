@@ -24,6 +24,8 @@ warn_days = 1
 crit_days = 14
 # ignore release candidate versions
 ignore_rc = True
+# ignore beta versions
+ignore_beta = True
 # fetch new changelogs once X day(s)
 fetch_changelog_days = 1
 # fetch changelog timeout in seconds
@@ -44,6 +46,8 @@ try:
             crit_days = int(cfg['crit_days'])
         if 'ignore_rc' in cfg:
             ignore_rc = bool(cfg['ignore_rc'])
+        if 'ignore_beta' in cfg:
+            ignore_beta = bool(cfg['ignore_beta'])
         if 'fetch_changelog_days' in cfg:
             fetch_changelog_days = int(cfg['fetch_changelog_days'])
         if 'fetch_changelog_timeout' in cfg:
@@ -104,6 +108,8 @@ pr = subprocess.run(
 
 jverlist = json.loads(pr.stdout)
 for verd in jverlist:
+    if verd['version'].endswith('b'):
+        continue
     if ignore_rc and 'r' in verd['version']:
         continue
     verver = packaging.version.parse(verd['version'])
