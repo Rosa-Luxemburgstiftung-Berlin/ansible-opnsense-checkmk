@@ -108,7 +108,7 @@ pr = subprocess.run(
 
 jverlist = json.loads(pr.stdout)
 for verd in jverlist:
-    if verd['version'].endswith('b'):
+    if ignore_beta and verd['version'].endswith('b'):
         continue
     if ignore_rc and 'r' in verd['version']:
         continue
