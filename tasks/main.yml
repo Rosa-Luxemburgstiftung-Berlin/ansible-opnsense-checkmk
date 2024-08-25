@@ -55,6 +55,16 @@
     - plugins
   when: opn_install_check_mk
 
+- name: create check_mk plugins cache dirs
+  ansible.builtin.file:
+    path: "{{ opn_check_mk_lib_dir }}/plugins/{{ item }}"
+    state: directory
+    mode: 0755
+  with_items: "{{ opn_check_mk_plugins | map('dirname') | unique |}}"
+  when:
+    - opn_install_check_mk
+    - item | length > 0
+
 - name: copy check_mk plugins
   ansible.builtin.copy:
     src: "{{ item }}"
@@ -62,6 +72,16 @@
     mode: 0700
   with_items: "{{ opn_check_mk_plugins }}"
   when: opn_install_check_mk
+
+- name: create check_mk local checks cache dirs
+  ansible.builtin.file:
+    path: "{{ opn_check_mk_lib_dir }}/local/{{ item }}"
+    state: directory
+    mode: 0755
+  with_items: "{{ opn_check_mk_local_checks | map('dirname') | unique }}"
+  when:
+    - opn_install_check_mk
+    - item | length > 0
 
 - name: copy check_mk local checks
   ansible.builtin.copy:
