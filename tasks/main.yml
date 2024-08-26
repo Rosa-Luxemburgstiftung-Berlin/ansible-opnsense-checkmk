@@ -67,10 +67,17 @@
 
 - name: copy check_mk plugins
   ansible.builtin.copy:
-    src: "{{ item }}"
+    src: "{{ lookup('ansible.builtin.first_found', _firstfound) }}"
     dest: "{{ opn_check_mk_lib_dir }}/plugins/{{ item }}"
     mode: 0700
   with_items: "{{ opn_check_mk_plugins }}"
+  vars:
+    _firstfound:
+      paths:
+        - files
+      files:
+        - "{{ item }}"
+        - "{{ item | basename }}"
   when: opn_install_check_mk
 
 - name: create check_mk local checks cache dirs
@@ -85,10 +92,17 @@
 
 - name: copy check_mk local checks
   ansible.builtin.copy:
-    src: "{{ item }}"
+    src: "{{  lookup('ansible.builtin.first_found', _firstfound) }}"
     dest: "{{ opn_check_mk_lib_dir }}/local/{{ item }}"
     mode: 0700
   with_items: "{{ opn_check_mk_local_checks }}"
+  vars:
+    _firstfound:
+      paths:
+        - files
+      files:
+        - "{{ item }}"
+        - "{{ item | basename }}"
   when: opn_install_check_mk
 
 - name: copy check_mk additional files
