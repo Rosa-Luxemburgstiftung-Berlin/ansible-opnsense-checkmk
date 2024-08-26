@@ -60,7 +60,7 @@
     path: "{{ opn_check_mk_lib_dir }}/plugins/{{ item }}"
     state: directory
     mode: 0755
-  with_items: "{{ opn_check_mk_plugins | map('dirname') | unique |}}"
+  with_items: "{{ opn_check_mk_plugins | map('dirname') | unique | list }}"
   when:
     - opn_install_check_mk
     - item | length > 0
@@ -78,7 +78,7 @@
     path: "{{ opn_check_mk_lib_dir }}/local/{{ item }}"
     state: directory
     mode: 0755
-  with_items: "{{ opn_check_mk_local_checks | map('dirname') | unique }}"
+  with_items: "{{ opn_check_mk_local_checks | map('dirname') | unique | list }}"
   when:
     - opn_install_check_mk
     - item | length > 0
