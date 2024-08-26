@@ -102,6 +102,13 @@ Sample output:
 0 PowerUnitGroup2 - OK - Power Unit Group: 2 Status: Present, OK
 ```
 
+## Plugins
+The role includes some (optional) plugins
+
+## wireguard
+
+a improved version of the checkkmk wireguard plugin (see [PR #32](https://github.com/Rosa-Luxemburgstiftung-Berlin/ansible-opnsense-checkmk/pull/32))
+
 ## Role Variables
 
 [defaults/main.yml](defaults/main.yml)
