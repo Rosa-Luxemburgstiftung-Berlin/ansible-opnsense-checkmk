@@ -102,6 +102,10 @@ Sample output:
 0 PowerUnitGroup2 - OK - Power Unit Group: 2 Status: Present, OK
 ```
 
+### check cputemp
+
+in order to work this check properly, the amdtemp should be selected under the System > Settings > Miscellaneous > Thermal Sensors > amdtemp
+
 ## Plugins
 The role includes some (optional) plugins
 
