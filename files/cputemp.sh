@@ -6,7 +6,6 @@ declare temp_crit=80
 # Function to display temperatures for all found sensors of a specific type
 display_temps() {
     local sensor_pattern=$1
-    local description=$2
 
     # Collect all relevant sensor readings
     sysctl -a | grep -E "$sensor_pattern" | while read sensor_data; do
@@ -23,20 +22,20 @@ display_temps() {
         elif (( $(echo "$temp >= $temp_warn" | bc -l) )); then
             ECODE=1
             TXT="CPU Temp warning"
-        fi 
-        echo "$ECODE CPUTEMP - temperature is $temp°C - $TXT"
+        fi
+        echo "$ECODE CPUTEMP-$sensor_id - temperature is $temp°C - $TXT"
     done
 }
 # Main script execution to check different sensor types
 # Check AMD temperature sensors
 if sysctl -a | grep -q 'dev.amdtemp.0.core0.sensor0'; then
-    display_temps 'dev.amdtemp.[0-9]+.core[0-1].sensor[0-1]' "AMD CPU Sensor"
+    display_temps 'dev.amdtemp.[0-9]+.core[0-1].sensor[0-1]'
 # Check Intel CPU temperature sensors
 elif sysctl -a | grep -q 'dev.cpu.0.temperature'; then
-    display_temps 'dev.cpu.[0-9]+.temperature' "Intel CPU Sensor"
+    display_temps 'dev.cpu.[0-9]+.temperature'
 # Check PCH temperature sensors, if any
 elif sysctl -a | grep -q 'dev.pchtherm.0.temperature'; then
-    display_temps 'dev.pchtherm.[0-9]+.temperature' "PCH Sensor"
+    display_temps 'dev.pchtherm.[0-9]+.temperature'
 else
     echo "3 CPUTEMP - UNKNOWN - No thermal sensors found or active"
 fi
