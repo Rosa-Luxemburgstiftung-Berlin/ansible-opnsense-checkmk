@@ -104,7 +104,23 @@ Sample output:
 
 ### check cputemp
 
-in order to work this check properly, the amdtemp should be selected under the System > Settings > Miscellaneous > Thermal Sensors > amdtemp
+Make sure you configure your OPNsense router as follows:
+
+Modify the /boot/loader.conf file and add the following entries:
+
+coretemp_load="YES" or amdtemp_load="YES"
+It's also acceptable to have both entries in your configuration.
+
+In some cases, if the script does not recognize the thermal sensor, you can manually switch it to either amdtemp or coretemp via the GUI.
+
+To do this, navigate to: System > Settings > Miscellaneous > Thermal Sensors > Hardware
+
+Alternatively, you can set this configuration using the OPNsense role under general settings:
+opn_general:
+  system/webgui/thermal_hardware: "amdtemp"
+
+Troubleshoot the functionality of your thermal sensors by using this command on your opnsense:
+sysctl -a | grep temperature
 
 ## Plugins
 The role includes some (optional) plugins
