@@ -32,15 +32,19 @@ opn_check_mk_port: 6556
 opn_check_mk_patches:
   - check_mk_agent-freeipmi.p0  # https://github.com/Rosa-Luxemburgstiftung-Berlin/ansible-opnsense-checkmk/issues/24
 
-# list of plugins and local checks to install
+# dict of plugins and local checks to install
+# new ! - we use a dict of lists in order to allow
+# adding additional checks per hosts / groups etc.
+# the old list syntax opn_check_mk_local_checks: [] is still supported
 opn_check_mk_local_checks:
-  - gateways_status.py
-  - crash_status.py
-  - firmware_status.py
-  - pkg_audit.py
-  - pkg_check.sh
-  - pfctl_status.sh
-  - check_powerunit.sh
+  all:
+    - gateways_status.py
+    - crash_status.py
+    - firmware_status.py
+    - pkg_audit.py
+    - pkg_check.sh
+    - pfctl_status.sh
+    - check_powerunit.sh
 
 # dict of additional files: file name => dest
 # example:

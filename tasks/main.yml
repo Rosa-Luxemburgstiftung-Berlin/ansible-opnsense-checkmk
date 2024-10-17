@@ -80,12 +80,26 @@
         - "{{ item | basename }}"
   when: opn_install_check_mk
 
+- name: convert deprecated format from list to dict for opn_check_mk_local_checks
+  ansible.builtin.set_fact:
+    opn_check_mk_local_checks: "{ 'deprecated' : {{ opn_check_mk_local_checks }} }"
+  when: opn_check_mk_local_checks | type_debug == "list"
+
+- name: create a uniq list of opn_check_mk_local_checks for internal use
+  ansible.builtin.set_fact:
+    _opn_check_mk_local_checks: "{{ opn_check_mk_local_checks.values() | list | flatten | unique | list }}"
+
+- name: debug _opn_check_mk_local_checks
+  ansible.builtin.debug:
+    var: _opn_check_mk_local_checks
+    verbosity: 1
+
 - name: create check_mk local checks cache dirs
   ansible.builtin.file:
     path: "{{ opn_check_mk_lib_dir }}/local/{{ item }}"
     state: directory
     mode: 0755
-  with_items: "{{ opn_check_mk_local_checks | map('dirname') | unique | list }}"
+  with_items: "{{ _opn_check_mk_local_checks | map('dirname') | unique | list }}"
   when:
     - opn_install_check_mk
     - item | length > 0
@@ -95,7 +109,7 @@
     src: "{{  lookup('ansible.builtin.first_found', _firstfound) }}"
     dest: "{{ opn_check_mk_lib_dir }}/local/{{ item }}"
     mode: 0700
-  with_items: "{{ opn_check_mk_local_checks }}"
+  with_items: "{{ _opn_check_mk_local_checks }}"
   vars:
     _firstfound:
       paths:
