@@ -127,6 +127,23 @@
   with_dict: "{{ opn_check_mk_additional_files }}"
   when: opn_install_check_mk
 
+- name: create {{ opn_check_mk_conf_dir }}
+  ansible.builtin.file:
+    path: "{{ opn_check_mk_conf_dir }}"
+    state: directory
+    mode: 0755
+  when:
+    - opn_install_check_mk
+
+- name: deploy mrpe.cfg
+  ansible.builtin.template:
+    src: mrpe.cfg.j2
+    dest: "{{ opn_check_mk_conf_dir }}/mrpe.cfg"
+    mode: "0644"
+  when:
+    - opn_install_check_mk
+    - opn_check_mk_mrpe_checks
+
 - name: enable check_mk_agent in /etc/inetd.conf
   ansible.builtin.lineinfile:
     path: /etc/inetd.conf
