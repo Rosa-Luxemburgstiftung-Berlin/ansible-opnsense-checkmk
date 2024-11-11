@@ -27,6 +27,7 @@ checkmk_agent_name: "check_mk_agent.freebsd"
 opn_install_check_mk: true
 opn_check_mk_path: /usr/local/sbin/check_mk_agent
 opn_check_mk_lib_dir: /usr/local/lib/check_mk_agent
+opn_check_mk_conf_dir: /etc/check_mk
 opn_check_mk_port: 6556
 
 # patches for the checkmk agent to apply
@@ -46,6 +47,13 @@ opn_check_mk_local_checks:
     - pkg_check.sh
     - pfctl_status.sh
     - check_powerunit.sh
+
+# dict of lists of mrpe checks to run
+# example:
+# opn_check_mk_mrpe_checks:
+#   ups:
+#     - UPS /usr/local/libexec/nagios/check_ups -H localhost -u UPSName
+opn_check_mk_mrpe_checks: {}
 
 # dict of additional files: file name => dest
 # example:
