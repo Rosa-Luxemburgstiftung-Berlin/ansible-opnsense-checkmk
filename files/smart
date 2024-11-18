@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#shellcheck disable=SC2086
+echo '<<<smart>>>'
+for disk in $(sysctl -n kern.disks)
+do
+	data=$(smartctl -a "/dev/${disk}")
+	model=$(awk '/^(Device Model|Product).*/ {print $NF}' <<< "$data")
+	serial=$(awk '/^Serial( |Number).*/ {print $NF}' <<< "$data")
+	name=$(tr ' ' '_' <<< "$model $serial")
+	fname="$name $model"
+	stats=$(grep -E '^[ 12][ 0-9][0-9]' <<< "$data")
+	while IFS= read -r line
+	do
+		echo "$line"
+	done < <(printf '%s %s\n' $fname "$stats")
+done
