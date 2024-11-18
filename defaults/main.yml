@@ -40,13 +40,13 @@ opn_check_mk_patches:
 # the old list syntax opn_check_mk_local_checks: [] is still supported
 opn_check_mk_local_checks:
   all:
-    - gateways_status.py
+    - check_powerunit.sh
     - crash_status.py
     - firmware_status.py
+    - gateways_status.py
+    - pfctl_status.sh
     - pkg_audit.py
     - pkg_check.sh
-    - pfctl_status.sh
-    - check_powerunit.sh
 
 # dict of lists of mrpe checks to run
 # example:
@@ -65,6 +65,11 @@ opn_check_mk_additional_files: {}
 # add here some plugin files (and add them to files/ too!
 # for example:
 # https://raw.githubusercontent.com/zerwes/check_mk_extensions/wireguard-fix-plugin-interpreter/wireguard/agents/plugins/wireguard
+#
+# plugins shipped within this repository and ready to be deployed:
+# opn_check_mk_plugins:
+#     - wireguard
+#     - smart
 opn_check_mk_plugins: []
 
 # set this to "{{ lookup('config', 'DEFAULT_LOCAL_TMP') | dirname }}"
