@@ -76,6 +76,10 @@ if vuln_pkg_count > 0:
             vulns[package]['issues'].append(issue['description'].lower())
 
 if args.print_config_file:
+    if not vulns:
+        print('-'*3)
+        print('.'*3)
+        sys.exit(0)
     print(
         yaml.dump(
             vulns,
