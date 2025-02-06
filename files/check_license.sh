@@ -16,7 +16,7 @@ if [[ ! -f "$LICENSE_FILE" ]]; then
 fi
 
 # Extract "valid_to" from the license file
-VALID_TO=$(awk -F'"' '/"valid_to"/ {print $4}' "$LICENSE_FILE")
+VALID_TO=$(jq -r .valid_to "$LICENSE_FILE")
 if [[ -z "$VALID_TO" ]]; then
     error_exit "3 LicenseCheck - UNKNOWN: 'valid_to' field not found or empty in $LICENSE_FILE"
 fi
