@@ -1,47 +1,78 @@
 #!/usr/local/bin/bash
-# Define variables
-declare -r VERSION=$(openvpn --version 2>/dev/null | head -n 1 | cut -d' ' -f1-3)
-declare -i OPENVPN_PORT=$(sed -nE 's/^port[[:space:]]+([0-9]+)$/\1/p' /var/etc/openvpn/*.conf)
-declare -r OPENVPN_STATUS=$(pluginctl -s openvpn status 2>&1)
-declare -ri ECODE=$?
+# Enhanced OpenVPN monitoring script for multiple instances with connection check
 
-# Function to check active connections
+# Function to check active connections on a given port
 check_connections() {
-    if command -v netstat > /dev/null; then
-        connections=$(netstat -an 2>/dev/null | grep -E "ESTABLISHED" | grep -w ${OPENVPN_PORT} | wc -l | sed 's/^ *//')
+    local port="$1"
+    if command -v netstat >/dev/null 2>&1; then
+        # Count established connections on the specified port
+        netstat -an 2>/dev/null | grep -E "ESTABLISHED" | grep -w "$port" | wc -l | sed 's/^ *//'
     else
         echo "Error: netstat command is not available on this system."
         exit 1
     fi
-
-    echo "$connections"
 }
 
-if [ -z "$OPENVPN_PORT" ] || [ "$OPENVPN_PORT" -eq 0 ]; then
-    OPENVPN_PORT=1194
-fi
-
-# Check pluginctl command success
-if [ $ECODE -gt 0 ]; then
-    echo "3 OpenVPN_Status - OpenVPN status is undefined: $OPENVPN_STATUS"
+# Retrieve OpenVPN status using pluginctl
+OpenVPN_STATUS=$(pluginctl -s openvpn status 2>&1)
+if [ $? -ne 0 ]; then
+    echo "3 OpenVPN_Status - OpenVPN status is undefined: $OpenVPN_STATUS"
     exit 3
 fi
 
-if [ -z "$OPENVPN_STATUS" ]; then
-    # unconfigured, ergo check is not required
-    exit 0
-fi
+# Initialize exit code and message
+declare -i EXITCODE=0
+MSG=""
 
-# Check if OpenVPN is running
-if echo "$OPENVPN_STATUS" | grep -q "is running"; then
-    connections=$(check_connections)
-    if [ $? -eq 0 ]; then
-        echo "0 OpenVPN_Status - OpenVPN is running. Active connections: $connections, Version: $VERSION"
+# Iterate over each OpenVPN configuration file
+for file in $([ -d /var/etc/openvpn/ ] && find /var/etc/openvpn/ -type f   -name \*.conf); do
+    # Extract the base name of the configuration file (without .conf)
+    instance=$(basename "$file" .conf)
+
+    # Determine the instance identifier based on file naming
+    if [[ "$instance" == instance-* ]]; then
+        # For instance-<UUID>.conf, extract the UUID
+        identifier="${instance#instance-}"
+    elif [[ "$instance" == server* ]]; then
+        # For server<ID>.conf, extract the numeric ID (or keep as is)
+        identifier="${instance#server}"
     else
-        echo "1 OpenVPN_Status - OpenVPN is running, but failed to retrieve active connections."
-        exit 1
+        # Skip files that don't match expected patterns
+        echo "Skipping unrecognized configuration file: $file"
+        continue
     fi
-else
-    echo "2 OpenVPN_Status - OpenVPN is not running!"
-    exit 2
-fi
+
+    # Extract the port number from the configuration file.
+    # Use "lport" for server configs and "port" for instance configs.
+    if [[ "$instance" == server* ]]; then
+        port=$(sed -nE 's/^[[:space:]]*lport[[:space:]]+([0-9]+).*$/\1/p' "$file")
+    else
+        port=$(sed -nE 's/^[[:space:]]*port[[:space:]]+([0-9]+).*$/\1/p' "$file")
+    fi
+    if [ -z "$port" ] || [ "$port" -eq 0 ]; then
+        port=1194
+    fi
+
+    # Search for the status line for the current instance in the pluginctl output.
+    status_line=$(echo "$OpenVPN_STATUS" | grep -E "^openvpn\[$identifier\]")
+
+    if [ -n "$status_line" ]; then
+        if echo "$status_line" | grep -q "is running"; then
+            # If running, check active connections on the extracted port.
+            connections=$(check_connections "$port")
+            MSG+="0 OpenVPN_$identifier - $status_line on port $port. Active connections: $connections.\n"
+        else
+            MSG+="2 OpenVPN_$identifier - $status_line\n"
+            EXITCODE=2
+        fi
+    else
+        MSG+="2 OpenVPN_$identifier - Status not found.\n"
+        EXITCODE=2
+    fi
+done
+
+# Output the accumulated messages
+echo -e "$MSG"
+
+# Exit with the appropriate code
+exit $EXITCODE
