@@ -129,6 +129,14 @@ Troubleshoot the functionality of your thermal sensors by using this command on 
 sysctl -a | grep temperature
 ```
 
+### check license
+
+Checks for a valid / expiring license (only for business edition)
+
+### check openvpn
+
+Check openvpn instances / servers if configured
+
 ## Plugins
 The role includes some (optional) plugins
 
