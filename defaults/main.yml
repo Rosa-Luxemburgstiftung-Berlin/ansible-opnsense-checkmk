@@ -76,3 +76,7 @@ opn_check_mk_plugins: []
 # set this to "{{ lookup('config', 'DEFAULT_LOCAL_TMP') | dirname }}"
 # to make the playbook multi user aware
 _local_tmp: /var/tmp
+
+# python packages to install in venv
+pippackages:
+  - setuptools
