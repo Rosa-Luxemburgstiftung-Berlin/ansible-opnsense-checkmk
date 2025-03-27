@@ -55,6 +55,13 @@
     - plugins
   when: opn_install_check_mk
 
+- name: create venv
+  ansible.builtin.pip:
+    name: "{{ pippackages }}"
+    virtualenv: "{{ opn_check_mk_lib_dir }}/venv"
+    virtualenv_command: python3 -m venv
+    virtualenv_site_packages: true
+
 - name: create check_mk plugins cache dirs
   ansible.builtin.file:
     path: "{{ opn_check_mk_lib_dir }}/plugins/{{ item }}"
