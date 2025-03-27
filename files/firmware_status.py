@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/local/lib/check_mk_agent/venv/bin/python
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 smartindent
 # pylint: disable=invalid-name,missing-module-docstring
 
