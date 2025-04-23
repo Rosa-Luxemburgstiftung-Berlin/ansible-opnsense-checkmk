@@ -1,11 +1,23 @@
---- check_mk_agent	2023-12-15 09:32:07.194344000 +0100
-+++ /usr/local/sbin/check_mk_agent	2023-12-15 10:25:58.113316000 +0100
-@@ -497,6 +497,23 @@
+--- /usr/local/sbin/check_mk_agent	2025-04-22 10:15:48.000000000 +0200
++++ check_mk_agent	2025-04-23 16:54:53.768469000 +0200
+@@ -606,13 +606,36 @@
+ 
+     # IPMI-Data (Fans, CPU, temperature, etc)
+     # needs the sysutils/ipmitool and kldload ipmi.ko
+-    if inpath ipmitool; then
+-        echo '<<<ipmi>>>'
+-        ipmitool sensor list |
++    # You sometimes have devices with the software + module but not the needed
++    # chip on board so we will stash it for a moment and return it if we got
++    # what we were here for. The alternative would be to set more and more rules
++    # in WATO.
++    IPMI_DATA="$(if inpath ipmitool; then
++        timeout 12 ipmitool sensor list |
+             grep -v 'command failed' |
              sed -e 's/ *| */|/g' -e "s/ /_/g" -e 's/_*$//' -e 's/|/ /g' |
              grep -v -E '^[^ ]+ na ' |
              grep -v ' discrete '
 +    elif inpath ipmi-sensors; then
-+        echo '<<<ipmi_sensors>>>'
 +        if ipmi-sensors --help | grep -q legacy-output; then
 +            IPMI_FORMAT="--legacy-output"
 +        else
@@ -17,10 +29,14 @@
 +            IPMI_GROUP_OPT="-t"
 +        fi
 +        for class in Temperature Power_Unit Fan; do
-+            ipmi-sensors ${IPMI_FORMAT} --sdr-cache-directory /var/cache ${IPMI_GROUP_OPT} "${class}" | sed -e 's/ /_/g' -e 's/:_/ /g' -e 's@ \([^(]*\)_(\([^)]*\))@ \2_\1@'
++            timeout 12 ipmi-sensors ${IPMI_FORMAT} --sdr-cache-directory /var/cache ${IPMI_GROUP_OPT} "${class}" | sed -e 's/ /_/g' -e 's/:_/ /g' -e 's@ \([^(]*\)_(\([^)]*\))@ \2_\1@'
 +            # In case of a timeout immediately leave loop.
 +            if [ $? = 255 ]; then break; fi
 +        done
++    fi)"
++    if [ -n "$IPMI_DATA" ]; then
++        echo '<<<ipmi_sensors>>>'
++        echo "${IPMI_DATA[@]}"
      fi
  
      # State of LSI MegaRAID controller via MegaCli.
