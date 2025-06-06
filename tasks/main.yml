@@ -42,7 +42,7 @@
     mode: 0700
   notify: service inetd
   when:
-    - opn_install_check_mk
+    - opn_install_check_mk | bool
     - checkmk_hostname is not defined
 
 - name: create lib dirs
@@ -53,7 +53,7 @@
   with_items:
     - local
     - plugins
-  when: opn_install_check_mk
+  when: opn_install_check_mk | bool
 
 - name: create venv
   ansible.builtin.pip:
@@ -69,7 +69,7 @@
     mode: 0755
   with_items: "{{ opn_check_mk_plugins | map('dirname') | unique | list }}"
   when:
-    - opn_install_check_mk
+    - opn_install_check_mk | bool
     - item | length > 0
 
 - name: copy check_mk plugins
@@ -85,7 +85,7 @@
       files:
         - "{{ item }}"
         - "{{ item | basename }}"
-  when: opn_install_check_mk
+  when: opn_install_check_mk | bool
 
 - name: convert deprecated format from list to dict for opn_check_mk_local_checks
   ansible.builtin.set_fact:
@@ -108,7 +108,7 @@
     mode: 0755
   with_items: "{{ _opn_check_mk_local_checks | map('dirname') | unique | list }}"
   when:
-    - opn_install_check_mk
+    - opn_install_check_mk | bool
     - item | length > 0
 
 - name: copy check_mk local checks
@@ -124,7 +124,7 @@
       files:
         - "{{ item }}"
         - "{{ item | basename }}"
-  when: opn_install_check_mk
+  when: opn_install_check_mk | bool
 
 - name: copy check_mk additional files
   ansible.builtin.copy:
@@ -132,7 +132,7 @@
     dest: "{{ item.value }}"
     mode: 0600
   with_dict: "{{ opn_check_mk_additional_files }}"
-  when: opn_install_check_mk
+  when: opn_install_check_mk | bool
 
 - name: create {{ opn_check_mk_conf_dir }}
   ansible.builtin.file:
@@ -140,7 +140,7 @@
     state: directory
     mode: 0755
   when:
-    - opn_install_check_mk
+    - opn_install_check_mk | bool
 
 - name: deploy mrpe.cfg
   ansible.builtin.template:
@@ -148,8 +148,8 @@
     dest: "{{ opn_check_mk_conf_dir }}/mrpe.cfg"
     mode: "0644"
   when:
-    - opn_install_check_mk
-    - opn_check_mk_mrpe_checks
+    - opn_install_check_mk | bool
+    - opn_check_mk_mrpe_checks | length > 0
 
 - name: enable check_mk_agent in /etc/inetd.conf
   ansible.builtin.lineinfile:
@@ -157,7 +157,7 @@
     line: "check_mk  stream  tcp nowait  root  {{ opn_check_mk_path }} {{ opn_check_mk_path | basename }}"
     regexp: "^check_mk "
   notify: service inetd
-  when: opn_install_check_mk
+  when: opn_install_check_mk | bool
 
 - name: add service to /etc/services
   ansible.builtin.lineinfile:
@@ -165,7 +165,7 @@
     line: "check_mk	{{ opn_check_mk_port }}/tcp   #check_mk agent"  # noqa no-tabs
     regexp: "^check_mk "
   notify: service inetd
-  when: opn_install_check_mk
+  when: opn_install_check_mk | bool
 
 - name: setup /etc/hosts.allow
   ansible.builtin.lineinfile:
@@ -173,7 +173,7 @@
     line: "check_mk	: {{ checkmk_ip }} : allow"  # noqa no-tabs
     regexp: "^check_mk "
   notify: service inetd
-  when: opn_install_check_mk
+  when: opn_install_check_mk | bool
 
 - name: debug ansible_local
   ansible.builtin.debug:
