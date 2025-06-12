@@ -1,4 +1,4 @@
-# {{ ansible_managed }}
+# Ansible managed
 
 {% for mrpecheckline in opn_check_mk_mrpe_checks.values() | list | flatten | unique | list %}
 {{ mrpecheckline }}
