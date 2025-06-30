@@ -14,6 +14,7 @@
         url: "{{ checkmk_proto }}://{{ checkmk_hostname }}/{{ checkmk_path }}/{{ checkmk_agent_name }}"
         dest: "{{ _local_tmp }}/{{ checkmk_agent_name }}"
         mode: "0600"
+        force: "{{ checkmk_agent_force_update | default(false) | bool }}"
 
     - name: apply patches
       delegate_to: localhost
