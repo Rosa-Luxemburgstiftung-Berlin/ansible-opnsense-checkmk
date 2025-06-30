@@ -188,3 +188,8 @@ And, of course, you will need to create a packet filter rule to allow connection
         - opnsense
         - checkmk
 ```
+
+### caveats
+
+In some cases downloading the latest agent version from the checkmk server might fail (see https://github.com/Rosa-Luxemburgstiftung-Berlin/ansible-opnsense-checkmk/issues/27).
+For such cases you should enforce the download of the latest script version using the var `checkmk_agent_force_update=true`
