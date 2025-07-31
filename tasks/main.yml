@@ -1,7 +1,14 @@
 ---
+
+- name: convert deprecated format from list to dict for opn_packages
+  ansible.builtin.set_fact:
+    opn_packages:
+      deprecated: "{{ opn_packages }}"
+  when: opn_packages | type_debug == "list"
+
 - name: Install opnsense packages
   community.general.pkgng:
-    name: "{{ opn_packages }}"
+    name: "{{ opn_packages.values() | list | flatten }}"
     state: present
 
 - name: install {{ checkmk_agent_name }} from server

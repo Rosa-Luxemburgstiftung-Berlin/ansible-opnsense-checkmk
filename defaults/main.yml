@@ -1,12 +1,13 @@
 ---
 # for check_mk you should set at least
 opn_packages:
-  - bash
-  - freeipmi
-  - libstatgrab
-  - dmidecode
-  - monitoring-plugins
-  - jq
+  checkmk:
+    - bash
+    - freeipmi
+    - libstatgrab
+    - dmidecode
+    - monitoring-plugins
+    - jq
 
 # in order to fetch the latest check_mk_agent.freebsd from a running checkmk server
 # define the hostname of the checkmk server;
