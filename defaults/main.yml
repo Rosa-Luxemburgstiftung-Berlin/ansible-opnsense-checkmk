@@ -8,6 +8,7 @@ opn_packages:
     - dmidecode
     - monitoring-plugins
     - jq
+    - socat
 
 # in order to fetch the latest check_mk_agent.freebsd from a running checkmk server
 # define the hostname of the checkmk server;
@@ -72,6 +73,7 @@ opn_check_mk_additional_files: {}
 # opn_check_mk_plugins:
 #     - wireguard
 #     - smart
+#     - mk_haproxy
 opn_check_mk_plugins: []
 
 # set this to "{{ lookup('config', 'DEFAULT_LOCAL_TMP') | dirname }}"

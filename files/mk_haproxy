@@ -1,0 +1,13 @@
+# Reason for this no-op: shellcheck disable=... before the first command disables the error for the
+# entire script.
+:
+
+# Disable unused variable error (needed to keep track of version)
+# shellcheck disable=SC2034
+CMK_VERSION="2.4.0p16"
+
+if [ -r /var/run/haproxy.socket ]; then
+	echo "<<<haproxy:sep(44)>>>"
+	echo "show stat" | socat - UNIX-CONNECT:/var/run/haproxy.socket
+fi
+
