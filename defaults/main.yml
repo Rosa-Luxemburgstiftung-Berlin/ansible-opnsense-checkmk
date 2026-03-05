@@ -8,6 +8,7 @@ opn_packages:
     - dmidecode
     - monitoring-plugins
     - jq
+    - "py{{ ansible_local.opnsense.core.CORE_PYTHON_DOT.split('.') | join('') }}-setuptools"
 
 # in order to fetch the latest check_mk_agent.freebsd from a running checkmk server
 # define the hostname of the checkmk server;
@@ -77,7 +78,3 @@ opn_check_mk_plugins: []
 # set this to "{{ lookup('config', 'DEFAULT_LOCAL_TMP') | dirname }}"
 # to make the playbook multi user aware
 _local_tmp: /var/tmp
-
-# python packages to install in venv
-pippackages:
-  - setuptools
