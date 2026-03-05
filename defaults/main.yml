@@ -8,6 +8,7 @@ opn_packages:
     - dmidecode
     - monitoring-plugins
     - jq
+    - "py{{ ansible_local.opnsense.core.CORE_PYTHON_DOT.split('.') | join('') }}-setuptools"
 
 # in order to fetch the latest check_mk_agent.freebsd from a running checkmk server
 # define the hostname of the checkmk server;
