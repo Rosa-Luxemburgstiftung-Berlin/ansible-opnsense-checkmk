@@ -51,6 +51,20 @@ opn_check_mk_local_checks:
     - pkg_audit.py
     - pkg_check.sh
 
+# dict of list of service names to check using 'configctl $service status'
+opn_checkmk_configctl_service_status: {}
+# you can use 'configctl service status' or
+# 'configctl | grep -w status' to see what you can use here
+# example:
+# opn_checkmk_configctl_service_status:
+#   all:
+#    - dhcpd
+#    - ipsec
+#    - unbound
+# 'configctl $service status'
+# must return something that will match
+# "$service is running as pid ..."
+
 # dict of lists of mrpe checks to run
 # example:
 # opn_check_mk_mrpe_checks:
