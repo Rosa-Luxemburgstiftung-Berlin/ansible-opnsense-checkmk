@@ -15,7 +15,7 @@ for checkservice in {{ opn_checkmk_configctl_service_status.values() | list | fl
         STATUS="UNKNOWN"
         TXT="configctl ${checkservice} status exit code $ECODE (?) ... $O"
     else
-        if  echo "$O" | grep "$checkservice" | grep -q " is running as pid "; then
+        if  echo "$O" | grep -q " is running as pid "; then
             TXT="$O (.)"
         else
             TXT="$O (!!)"
