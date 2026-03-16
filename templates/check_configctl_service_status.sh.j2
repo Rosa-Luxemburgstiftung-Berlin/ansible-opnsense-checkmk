@@ -7,7 +7,7 @@ for checkservice in {{ opn_checkmk_configctl_service_status.values() | list | fl
     STATUSCODE=0
     STATUS="OK"
     TXT=""
-    CHECKNAME="${checkservice}-service-status"
+    CHECKNAME="service-status-${checkservice}"
     O=$(configctl ${checkservice} status 2>&1)
     ECODE=$?
     if [ $ECODE -gt 0 ]; then
