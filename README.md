@@ -138,6 +138,29 @@ Checks for a valid / expiring license (only for business edition)
 
 Check openvpn instances / servers if configured
 
+### generic service state check
+
+`check_configctl_service_status.sh` will be deployed as a template.
+
+Configurable vars:
+  * `opn_checkmk_configctl_service_status` : dict of list of service names to check using `configctl $service status`
+
+Example:
+```yaml
+opn_checkmk_configctl_service_status:
+  all:
+    - dhcpd
+    - lldpd
+    - syslog
+```
+
+Sample output:
+```
+0 dhcpd-service-status OK - dhcpd is running as pid 49889. (.)
+0 lldpd-service-status OK - lldpd is running as pid 61302. (.)
+0 syslog-service-status OK - syslog_ng is running as pid 26860. (.)
+```
+
 ## Plugins
 The role includes some (optional) plugins
 
