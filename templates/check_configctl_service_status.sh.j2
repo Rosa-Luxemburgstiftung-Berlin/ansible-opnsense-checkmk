@@ -2,7 +2,7 @@
 
 declare -i ECODE=0
 declare -i STATUSCODE=0
-declare STATUS="OK"
+declare STATUS="(.)"
 for checkservice in {{ opn_checkmk_configctl_service_status.values() | list | flatten | unique | list | join(' ') }}; do
     STATUSCODE=0
     STATUS="OK"
@@ -12,15 +12,15 @@ for checkservice in {{ opn_checkmk_configctl_service_status.values() | list | fl
     ECODE=$?
     if [ $ECODE -gt 0 ]; then
         STATUSCODE=3
-        STATUS="UNKNOWN"
-        TXT="configctl ${checkservice} status exit code $ECODE (?) ... $O"
+        STATUS="(?)"
+        TXT="configctl ${checkservice} status exit code $ECODE ... $O"
     else
+        TXT="$O"
         if  echo "$O" | grep -q " is running as pid "; then
-            TXT="$O (.)"
+            STATUS="(.)"
         else
-            TXT="$O (!!)"
+            STATUS="(!!)"
             STATUSCODE=2
-            STATUS="CRITICAL"
         fi
     fi
     echo "$STATUSCODE $CHECKNAME - $STATUS $TXT"
