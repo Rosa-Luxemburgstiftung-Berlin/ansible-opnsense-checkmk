@@ -127,6 +127,15 @@
         - "{{ item | basename }}"
   when: opn_install_check_mk | bool
 
+- name: install check_configctl_service_status opn_checkmk_configctl_service_status
+  ansible.builtin.template:
+    src: check_configctl_service_status.sh.j2
+    dest: "{{ opn_check_mk_lib_dir }}/local/check_configctl_service_status.sh"
+    mode: 0700
+  when:
+    - opn_install_check_mk | bool
+    - opn_checkmk_configctl_service_status | length > 0
+
 - name: copy check_mk additional files
   ansible.builtin.copy:
     src: "{{ item.key }}"
