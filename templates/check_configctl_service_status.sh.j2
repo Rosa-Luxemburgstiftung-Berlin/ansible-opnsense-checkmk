@@ -23,5 +23,5 @@ for checkservice in {{ opn_checkmk_configctl_service_status.values() | list | fl
             STATUS="CRITICAL"
         fi
     fi
-    echo "$STATUSCODE $CHECKNAME $STATUS - $TXT"
+    echo "$STATUSCODE $CHECKNAME - $STATUS $TXT"
 done
