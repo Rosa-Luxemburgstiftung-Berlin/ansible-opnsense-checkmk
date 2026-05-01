@@ -7,7 +7,7 @@ import json
 import subprocess
 
 pr = subprocess.run(
-        ['configctl', 'interface gateways status'],
+        ['configctl', 'interface', 'gateways', 'status'],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         check=True
