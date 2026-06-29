@@ -34,6 +34,8 @@ fetch_changelog_timeout = 20
 pkg_update_test = True
 # timeout for pkg update test
 pkg_update_timeout = 20
+# warning level for upgraded pkg count
+pkg_upgrade_level = 1
 
 cfg_file = '%s.%s' % (os.path.splitext(os.path.abspath(__file__))[0], 'yml',)
 
@@ -56,6 +58,8 @@ try:
             pkg_update_test = bool(cfg['pkg_update_test'])
         if 'pkg_update_timeout' in cfg:
             pkg_update_timeout = int(cfg['pkg_update_timeout'])
+        if 'pkg_upgrade_level' in cfg:
+            pkg_upgrade_level = int(cfg['pkg_upgrade_level'])
 except FileNotFoundError:
     pass
 
@@ -176,7 +180,7 @@ for pcounter in pkgcounters:
 pkgecode = 0
 pkgstatus = 'OK'
 pkgtxt = 'all packages up to date'
-if pkgcounters['upgraded'] > 0:
+if pkgcounters['upgraded'] >= pkg_upgrade_level:
     pkgecode = 1
     pkgstatus = 'WARNING'
     pkgtxt = 'packages actions required'
