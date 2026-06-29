@@ -185,7 +185,7 @@ if pkgcounters['upgraded'] >= pkg_upgrade_level:
     pkgstatus = 'WARNING'
     pkgtxt = 'packages actions required'
     if ecode > 0:
-        pkgecode = 1
+        pkgecode = 2
         pkgstatus = 'CRITICAL'
 
 print('%s PACKAGES %s %s - %s' % (pkgecode, pkgperfdata, pkgstatus, pkgtxt))
