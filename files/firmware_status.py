@@ -8,6 +8,7 @@ from datetime import datetime
 import subprocess
 import json
 import yaml
+import re
 from pkg_resources import packaging
 
 ####################################################
@@ -66,6 +67,8 @@ except FileNotFoundError:
 emsg = ""
 today = datetime.today()
 
+def base(v):
+    return v.split('_')[0].replace('p', '')
 # test if we must fetch changelog
 fetchchangelog = False
 try:
@@ -94,12 +97,13 @@ pr = subprocess.run(
         stderr=subprocess.PIPE,
         check=True
     )
-opn_version = pr.stdout.decode().split('_')[0].strip()
-opnver = packaging.version.parse(opn_version)
 
+raw_opn_version = pr.stdout.decode().strip()
+opn_version = raw_opn_version.split('_')[0].strip()
+opnver = packaging.version.parse(base(opn_version))
 ecode = 0
 status = 'OK'
-txt = 'version %s is up to date' % opn_version
+txt = 'version %s is up to date' % raw_opn_version
 nextversion = None
 latestversion = None
 
@@ -116,7 +120,8 @@ for verd in jverlist:
         continue
     if ignore_rc and 'r' in verd['version']:
         continue
-    verver = packaging.version.parse(verd['version'])
+    ver_clean = verd['version'].split('_')[0]
+    verver = packaging.version.parse(base(ver_clean))
     if verver <= opnver:
         continue
     nextversion = verd
@@ -134,7 +139,7 @@ if nextversion:
         ecode = 1
         status = 'WARNING'
     txt = 'update %s to %s available since %s days' % (
-                            opn_version,
+                            raw_opn_version,
                             nextversion['version'],
                             ddiffdays,
                         )
