@@ -8,7 +8,6 @@ from datetime import datetime
 import subprocess
 import json
 import yaml
-import re
 from pkg_resources import packaging
 
 ####################################################
@@ -68,6 +67,7 @@ emsg = ""
 today = datetime.today()
 
 def base(v):
+    """Normalize an OPNsense version for comparison."""
     return v.split('_')[0].replace('p', '')
 # test if we must fetch changelog
 fetchchangelog = False
