@@ -180,7 +180,10 @@ for pcounter in pkgcounters:
             break
     if len(pkgperfdata) > 0:
         pkgperfdata = '%s|' % pkgperfdata
-    pkgperfdata = '%s%s=%s;;;;' % (pkgperfdata, pcounter, pkgcounters[pcounter])
+    pwarnlevel = ""
+    if pcounter == 'upgraded':
+        pwarnlevel = pkg_upgrade_level
+    pkgperfdata = '%s%s=%s;%s;;;' % (pkgperfdata, pcounter, pkgcounters[pcounter], pwarnlevel)
 
 pkgecode = 0
 pkgstatus = 'OK'
