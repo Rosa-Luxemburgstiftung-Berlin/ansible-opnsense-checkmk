@@ -15,6 +15,8 @@ pr = subprocess.run(
 
 jo = json.loads(pr.stdout)
 for gw in jo:
+    if isinstance(gw, str):  # output changed from list to dict w/ CE 26.7
+        gw = jo[gw]
     ecode = 0
     status = 'OK'
     if gw['status'] != 'none':
