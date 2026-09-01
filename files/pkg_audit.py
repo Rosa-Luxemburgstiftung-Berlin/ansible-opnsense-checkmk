@@ -67,7 +67,7 @@ pr = subprocess.run(
 
 try:
     vulnx = json.loads(pr.stdout)
-except Exception as e:
+except Exception as e:  # pylint: disable=broad-except
     print('3 PKGAUDIT - UNKNOWN - %s %s' % (e, pr.stderr))
     sys.exit(3)
 
