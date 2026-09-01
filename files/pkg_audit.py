@@ -68,7 +68,7 @@ pr = subprocess.run(
 try:
     vulnx = json.loads(pr.stdout)
 except Exception as e:
-   print('3 PKGAUDIT UNKNOWN - %s %s' % (e, pr.stderr))
+   print('3 PKGAUDIT - UNKNOWN - %s %s' % (e, pr.stderr))
    sys.exit(3)
 
 vuln_pkg_count = vulnx['pkg_count']
