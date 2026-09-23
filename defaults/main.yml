@@ -48,6 +48,7 @@ opn_check_mk_local_checks:
     - firmware_status.py
     - gateways_status.py
     - pfctl_status.sh
+    - system_status.py
     - pkg_audit.py
     - pkg_check.sh
 
