@@ -62,6 +62,15 @@ Sample output:
 1 SYSTEM-STATUS - WARNING - unboundblocklist Incompatible blocklist The Unbound blocklist has an incompatible format. Please manually re-apply the blocklist settings.
 ```
 
+### pfctl status
+
+Check the packet filter (PF) rules
+
+Sample output:
+```
+0 PFCTLSTATUS - OK - pfctl rules OK
+```
+
 ### package audit
 
 Audit installed packages against known vulnerabilities.
