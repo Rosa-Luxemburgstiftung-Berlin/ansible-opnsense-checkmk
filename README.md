@@ -52,6 +52,16 @@ Configurable vars:
   * `pkg_update_test`: perform a pkg update test; if set to `False`, the `PACKAGES` will be skipped; default: True
   * `pkg_update_timeout`: timeout for pkg update test in seconds; default: 20
 
+### system status
+
+Check current system status
+
+Sample output:
+```
+0 SYSTEM-STATUS - OK -
+1 SYSTEM-STATUS - WARNING - unboundblocklist Incompatible blocklist The Unbound blocklist has an incompatible format. Please manually re-apply the blocklist settings.
+```
+
 ### package audit
 
 Audit installed packages against known vulnerabilities.
