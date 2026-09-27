@@ -93,7 +93,8 @@ opn_check_mk_additional_templates: {}
 # plugins shipped within this repository and ready to be deployed:
 # opn_check_mk_plugins:
 #     - wireguard
-#     - smart
+#     - smart_posix # https://checkmk.com/werk/17210
+#     - smart # https://checkmk.com/werk/17732
 opn_check_mk_plugins: []
 
 # set this to "{{ lookup('config', 'DEFAULT_LOCAL_TMP') | dirname }}"
