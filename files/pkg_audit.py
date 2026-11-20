@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 smartindent
-# pylint: disable=invalid-name,missing-module-docstring,too-many-ancestors,super-with-arguments
+# pylint: disable=invalid-name,missing-module-docstring,too-many-ancestors,super-with-arguments,consider-using-f-string
 
 import os
 import sys
@@ -53,7 +53,7 @@ args = argparser.parse_args()
 cfg_file = args.configfile
 vulnack = None
 try:
-    with open(cfg_file, "r") as ymlfile:
+    with open(cfg_file, "r", encoding="utf-8") as ymlfile:
         vulnack = yaml.load(ymlfile, Loader=yaml.BaseLoader)
 except FileNotFoundError:
     pass

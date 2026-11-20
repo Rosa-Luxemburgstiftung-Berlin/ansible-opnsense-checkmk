@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 smartindent
-# pylint: disable=invalid-name,missing-module-docstring
+# pylint: disable=invalid-name,missing-module-docstring,consider-using-f-string
 
 import os
 import sys
@@ -40,7 +40,7 @@ pkg_upgrade_level = 1
 cfg_file = '%s.%s' % (os.path.splitext(os.path.abspath(__file__))[0], 'yml',)
 
 try:
-    with open(cfg_file, "r") as ymlfile:
+    with open(cfg_file, "r", encoding="utf-8") as ymlfile:
         cfg = yaml.load(ymlfile, Loader=yaml.BaseLoader)
         if 'warn_days' in cfg:
             warn_days = int(cfg['warn_days'])

@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4 smartindent
-# pylint: disable=invalid-name,missing-module-docstring
+# pylint: disable=invalid-name,missing-module-docstring,consider-using-f-string
 import os
 import glob
 
