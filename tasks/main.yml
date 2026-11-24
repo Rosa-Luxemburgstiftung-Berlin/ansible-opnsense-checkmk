@@ -88,6 +88,30 @@
         - "{{ item | basename }}"
   when: opn_install_check_mk | bool
 
+- name: install plugins from server
+  block:
+    - name: download plugins from server
+      delegate_to: localhost
+      check_mode: false
+      run_once: true
+      ansible.builtin.get_url:
+        url: "{{ checkmk_proto }}://{{ checkmk_hostname }}/{{ checkmk_path }}/plugins/{{ item }}"
+        dest: "{{ _local_tmp }}/{{ item }}"
+        mode: "0600"
+      with_items: "{{ opn_fetch_check_mk_plugins.values() | list | flatten }}"
+
+    - name: copy plugins from {{ _local_tmp }}
+      ansible.builtin.copy:
+        src: "{{ _local_tmp }}/{{ item }}"
+        dest: "{{ opn_check_mk_lib_dir }}/plugins/{{ item }}"
+        mode: 0700
+      when: item | length > 0
+      with_items: "{{ opn_fetch_check_mk_plugins.values() | list | flatten }}"
+  when:
+    - opn_install_check_mk | bool
+    - checkmk_hostname is defined
+    - opn_fetch_check_mk_plugins | length > 0
+
 - name: convert deprecated format from list to dict for opn_check_mk_local_checks
   ansible.builtin.set_fact:
     opn_check_mk_local_checks: "{ 'deprecated' : {{ opn_check_mk_local_checks }} }"
