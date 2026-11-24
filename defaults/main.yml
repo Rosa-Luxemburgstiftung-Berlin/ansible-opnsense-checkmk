@@ -37,6 +37,15 @@ opn_check_mk_port: 6556
 opn_check_mk_patches:
   - check_mk_agent-freeipmi.p0  # https://github.com/Rosa-Luxemburgstiftung-Berlin/ansible-opnsense-checkmk/issues/24
 
+# dict of all plugins to be downloaded and installed from main check_mk site
+# expected path on server: {{ checkmk_path }}/plugins/
+# example:
+# opn_fetch_check_mk_plugins:
+#   all:
+#     - isc_dhcpd.py
+opn_fetch_check_mk_plugins: {}
+
+
 # dict of plugins and local checks to install
 # new ! - we use a dict of lists in order to allow
 # adding additional checks per hosts / groups etc.
