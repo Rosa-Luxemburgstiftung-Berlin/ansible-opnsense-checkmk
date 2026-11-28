@@ -8,7 +8,11 @@ from datetime import datetime
 import subprocess
 import json
 import yaml
-from pkg_resources import packaging
+try:
+    from packaging import version
+except ImportError:  # packaging only available inside an older setuptools
+    from pkg_resources import packaging
+    version = packaging.version
 
 ####################################################
 # these cfg settings can be set via a cfg file
@@ -100,7 +104,7 @@ pr = subprocess.run(
 
 raw_opn_version = pr.stdout.decode().strip()
 opn_version = raw_opn_version.split('_')[0].strip()
-opnver = packaging.version.parse(base(opn_version))
+opnver = version.parse(base(opn_version))
 ecode = 0
 status = 'OK'
 txt = 'version %s is up to date' % raw_opn_version
@@ -121,7 +125,7 @@ for verd in jverlist:
     if ignore_rc and 'r' in verd['version']:
         continue
     ver_clean = verd['version'].split('_')[0]
-    verver = packaging.version.parse(base(ver_clean))
+    verver = version.parse(base(ver_clean))
     if verver <= opnver:
         continue
     nextversion = verd
